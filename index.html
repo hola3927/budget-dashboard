@@ -7,121 +7,194 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root {
-    --primary: #1e3a8a;
-    --accent: #2563eb;
-    --accent-light: #eff6ff;
-    --border: #cbd5e1;
-    --bg: #f8fafc;
-    --text: #0f172a;
-    --text-muted: #64748b;
+    --naver-green: #03C75A;
+    --naver-green-dark: #029f45;
+    --naver-green-light: #f0fdf4;
+    --naver-green-border: #bbf7d0;
+    --hwp-border-dark: #b8bfc7;
+    --hwp-border: #d3d8df;
+    --hwp-header-bg: #f4f6f9;
+    --bg-gray: #f5f6f8;
+    --text-main: #1e2022;
+    --text-sub: #636b73;
+    --card-bg: #ffffff;
   }
   * { box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
-    margin: 0; padding: 24px; background-color: var(--bg); color: var(--text);
+    font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, sans-serif;
+    margin: 0; padding: 20px 24px 40px; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.5;
   }
-  .container { max-width: 1400px; margin: 0 auto; }
+  .container { max-width: 1440px; margin: 0 auto; }
+
+  /* 상단 헤더: 네이버네이버하고 + 약간 밤티나는 한컴 HWP 공문서 서식 스타일 */
   .header {
-    background: white; padding: 24px 30px; border-radius: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px;
+    background: var(--card-bg); padding: 20px 26px; border-radius: 8px;
+    border: 1px solid var(--hwp-border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 16px;
   }
-  h1 { margin: 0 0 8px 0; font-size: 23px; color: var(--primary); }
-  p.subtitle { margin: 0; color: var(--text-muted); font-size: 13.5px; }
+  .header-top {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;
+  }
+  .title-area { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 28px; height: 28px; background-color: var(--naver-green); color: white;
+    border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 16px;
+  }
+  h1 { margin: 0; font-size: 21px; color: #111; font-weight: 700; letter-spacing: -0.5px; }
+  .version-badge {
+    background-color: var(--naver-green-light); color: var(--naver-green-dark);
+    border: 1px solid var(--naver-green-border); padding: 2px 8px; border-radius: 4px;
+    font-size: 11.5px; font-weight: 700;
+  }
+  .feedback-btn {
+    display: inline-flex; align-items: center; gap: 6px; background-color: #ffffff;
+    border: 1px solid var(--hwp-border); color: #333; padding: 5px 12px; border-radius: 6px;
+    font-size: 12.5px; text-decoration: none; font-weight: 600; transition: 0.15s;
+  }
+  .feedback-btn:hover { border-color: var(--naver-green); color: var(--naver-green-dark); background: var(--naver-green-light); }
+  .subtitle { margin: 0; color: var(--text-sub); font-size: 13px; }
 
+  /* HWP 스타일 안내 상자 */
   .guide-box {
-    background-color: #f1f5f9; border-left: 4px solid var(--accent);
-    padding: 12px 18px; margin-top: 14px; border-radius: 4px; font-size: 13px; line-height: 1.6;
+    background-color: #fafbfc; border: 1px solid var(--hwp-border); border-left: 4px solid var(--naver-green);
+    padding: 11px 16px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; line-height: 1.6; color: #333;
   }
-  .guide-box ol { margin: 4px 0 0 18px; padding: 0; }
+  .guide-box strong { color: var(--naver-green-dark); }
+  .guide-box ol { margin: 3px 0 0 18px; padding: 0; }
 
+  /* 파일 드롭존 (네이버 첨부창 스타일) */
   .drop-zone {
-    border: 2px dashed #93c5fd; background: white; border-radius: 12px;
-    padding: 30px; text-align: center; cursor: pointer; transition: 0.2s; margin-bottom: 20px;
+    border: 2px dashed #a7e3be; background: var(--card-bg); border-radius: 8px;
+    padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; margin-bottom: 16px;
   }
-  .drop-zone:hover { background-color: var(--accent-light); border-color: var(--accent); }
+  .drop-zone:hover { background-color: var(--naver-green-light); border-color: var(--naver-green); }
   .drop-zone input { display: none; }
-  .drop-zone-icon { font-size: 32px; color: var(--accent); margin-bottom: 8px; }
+  .drop-zone-icon { font-size: 28px; margin-bottom: 6px; }
 
+  /* 컨트롤 바 */
   .controls {
-    background: white; padding: 16px 24px; border-radius: 12px; display: flex;
-    flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px;
+    background: var(--card-bg); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--hwp-border);
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03); margin-bottom: 16px;
   }
-  .btn-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .btn {
-    border: 1px solid var(--border); background: white; padding: 8px 16px;
-    border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.15s;
+  .tab-group-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .tab-subgroup { display: flex; align-items: center; gap: 6px; }
+  .subgroup-label { font-size: 12px; font-weight: 700; color: #444; background: #eaedf1; padding: 4px 8px; border-radius: 4px; }
+  
+  .btn-tab {
+    border: 1px solid var(--hwp-border); background: white; padding: 6px 12px;
+    border-radius: 5px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: 0.12s; color: #333;
   }
-  .btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-  .btn-download { background: #059669; color: white; border: none; }
-  .btn-download:hover { background: #047857; }
+  .btn-tab:hover { background-color: #f1f3f5; }
+  .btn-tab.active { background: var(--naver-green); color: white; border-color: var(--naver-green); }
 
   select.custom-select {
-    padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
-    font-size: 13px; background-color: white; color: var(--text); outline: none;
+    padding: 6px 10px; border-radius: 5px; border: 1px solid var(--hwp-border);
+    font-size: 12.5px; background-color: white; color: var(--text-main); outline: none;
   }
+  select.custom-select:focus { border-color: var(--naver-green); }
 
-  .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
-  .card { background: white; padding: 18px 20px; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-  .card .label { font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-  .card .value { font-size: 21px; font-weight: 700; color: var(--text); }
-  .card .rate { color: var(--accent); font-weight: 800; }
+  .btn-download {
+    background: var(--naver-green); color: white; border: 1px solid var(--naver-green-dark);
+    padding: 6px 14px; border-radius: 5px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: 0.15s;
+  }
+  .btn-download:hover { background: var(--naver-green-dark); }
 
+  /* 요약 카드: 네이버페이 / 금융 대시보드 스타일 */
+  .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .card {
+    background: var(--card-bg); padding: 16px 18px; border-radius: 8px; border: 1px solid var(--hwp-border);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .card .label { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
+  .card .value { font-size: 20px; font-weight: 700; color: #111; }
+  .card .point-green { color: var(--naver-green-dark); }
+
+  /* 테이블 영역: HWP 공문서 표(격자 실선) 스타일 */
   .table-container {
-    background: white; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    overflow-x: auto; border: 1px solid #e2e8f0;
+    background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border-dark);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;
   }
-  table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12.5px; min-width: 1050px; }
-  th, td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
-  th { background: #f8fafc; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; }
-  th.group-header { text-align: center; border-bottom: 1px solid #cbd5e1; font-size: 12px; cursor: default; }
+  table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; min-width: 1100px; }
+  th, td { padding: 7px 9px; border: 1px solid var(--hwp-border); white-space: nowrap; }
+  th { background: var(--hwp-header-bg); font-weight: 700; color: #2b3036; text-align: center; }
+  th.group-header { border-bottom: 1px solid var(--hwp-border-dark); font-size: 11.5px; }
   
-  /* 클릭 정렬 헤더 스타일 */
-  th.sortable { cursor: pointer; user-select: none; transition: background-color 0.15s; }
-  th.sortable:hover { background-color: #e2e8f0; color: var(--primary); }
-  th.sort-active { background-color: #e0e7ff !important; color: #1e3a8a !important; }
-  .sort-icon { display: inline-block; font-size: 10px; margin-left: 4px; color: var(--accent); }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { background-color: #e5e9ef; color: var(--naver-green-dark); }
+  th.sort-active { background-color: #e6f6ee !important; color: #027a35 !important; border-bottom: 2px solid var(--naver-green); }
+  .sort-icon { display: inline-block; font-size: 9px; margin-left: 3px; color: var(--naver-green); }
 
   td.text-left { text-align: left; }
-  tr:hover { background-color: #f8fafc; }
-  tr.total-row { background: #eff6ff; font-weight: 700; }
-  .highlight-val { font-weight: 700; color: #1e3a8a; }
+  tr:nth-child(even) { background-color: #fafbfc; }
+  tr:hover { background-color: #f1f8f4; }
+  tr.total-row {
+    background: #eef9f2 !important; font-weight: 700;
+    border-top: 2px solid var(--naver-green) !important; border-bottom: 2px solid var(--naver-green) !important;
+  }
+  .highlight-cell { font-weight: 700; color: #027a35; background-color: #f6fcf8; }
+
+  /* 배지 스타일 */
+  .badge-item {
+    background-color: #eef2f6; color: #2d3748; padding: 2px 6px; border-radius: 4px;
+    font-size: 11.5px; font-weight: 600; border: 1px solid #d8e0e8; margin-right: 4px;
+  }
+  .badge-sub { font-weight: 600; color: #1a202c; }
+
+  /* 푸터 */
+  .footer { margin-top: 20px; text-align: center; font-size: 12px; color: var(--text-sub); }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
+    <div class="header-top">
+      <div class="title-area">
+        <div class="logo-icon">창</div>
+        <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
+        <span class="version-badge">20260903 1230 버전</span>
+      </div>
+      <a href="mailto:hola3927@korea.kr" class="feedback-btn" title="오류 제보 및 기능 제안">
+        ✉ 피드백 및 문의: <strong>hola3927@korea.kr</strong>
+      </a>
+    </div>
     <p class="subtitle">K-에듀파인 [예산현액] 엑셀 파일을 일괄 정리하여 비목별 / 세목별 / 사업항목별 실집행 현황을 산출합니다.</p>
     
     <div class="guide-box">
-      <strong>K-에듀파인 엑셀 다운로드 경로 안내</strong>
+      <strong>K-에듀파인 엑셀 파일 다운로드 방법</strong>
       <ol>
         <li>K-에듀파인 > 재정사업관리 > 사업담당재정관리 > 예산관리 > 예산편성 > 사업관리카드</li>
-        <li>조회 후 작업 대상 단위과제카드 번호 클릭</li>
-        <li>상단 <strong>[예산현액]</strong> 탭 클릭 후 <strong>"일상경비 포함" 체크박스 반드시 선택</strong></li>
-        <li>우측 상단 <strong>[파일]</strong> 버튼을 클릭하여 다운로드</li>
+        <li>조회 후 정리할 사업관리카드(단위과제카드) 번호 클릭</li>
+        <li>상단 <strong>[예산현액]</strong> 탭 클릭 후 <strong>"일상경비 포함" 체크박스 선택</strong></li>
+        <li>우측 상단 <strong>[파일]</strong> 버튼을 클릭하여 엑셀 다운로드</li>
       </ol>
     </div>
   </div>
 
   <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
     <input type="file" id="fileInput" multiple accept=".xlsx, .xls">
-    <div class="drop-zone-icon">📁</div>
-    <strong style="font-size:15px;">K-에듀파인 엑셀 파일(.xlsx)을 드래그하거나 클릭하여 추가하세요</strong>
-    <div id="fileListText" style="margin-top: 6px; color: var(--text-muted); font-size: 13px;">여러 개의 파일을 동시에 선택하거나 연속으로 넣을 수 있습니다.</div>
+    <div class="drop-zone-icon">📥</div>
+    <strong style="font-size:14.5px; color:#222;">K-에듀파인 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭하여 선택하세요</strong>
+    <div id="fileListText" style="margin-top: 5px; color: var(--text-sub); font-size: 12.5px;">여러 개의 엑셀 파일을 한 번에 선택하여 일괄 업로드할 수 있습니다.</div>
   </div>
 
   <div class="controls" id="controls" style="display:none;">
-    <div class="btn-group">
-      <span style="font-size: 13px; font-weight: bold; margin-right: 4px;">정리 방법:</span>
-      <button class="btn active" id="btnBimok" onclick="changeMode('bimok')">1-1. 비목별</button>
-      <button class="btn" id="btnSemok" onclick="changeMode('semok')">1-2. 세목별</button>
-      <button class="btn" id="btnItem" onclick="changeMode('item')">2. 사업항목별</button>
+    <div class="tab-group-wrap">
+      <div class="tab-subgroup">
+        <span class="subgroup-label">1. 비목 기준</span>
+        <button class="btn-tab active" id="btn_bimok" onclick="changeMode('bimok')">1-1. 비목별</button>
+        <button class="btn-tab" id="btn_semok" onclick="changeMode('semok')">1-2. 세목별</button>
+      </div>
+      <div class="tab-subgroup">
+        <span class="subgroup-label">2. 사업항목 기준</span>
+        <button class="btn-tab" id="btn_item" onclick="changeMode('item')">2. 사업항목별</button>
+        <button class="btn-tab" id="btn_item_bimok" onclick="changeMode('item_bimok')">2-1. 사업항목 내 비목별</button>
+        <button class="btn-tab" id="btn_item_semok" onclick="changeMode('item_semok')">2-2. 사업항목 내 세목별</button>
+      </div>
     </div>
 
-    <div class="btn-group">
-      <span style="font-size: 13px; font-weight: bold; margin-right: 4px;">정렬 기준:</span>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span style="font-size: 12px; font-weight: bold; color: #444;">정렬:</span>
       <select id="sortSelect" class="custom-select" onchange="onSortSelectChange()">
         <option value="name_asc">구분 순 (기본값 / 가나다·코드순)</option>
         <option value="budget_desc">예산현액 많은 순</option>
@@ -133,18 +206,18 @@
         <option value="budget_asc">예산현액 적은 순</option>
       </select>
 
-      <span style="font-size: 13px; font-weight: bold; margin-left: 8px; margin-right: 4px;">집계 대상:</span>
+      <span style="font-size: 12px; font-weight: bold; color: #444; margin-left:4px;">대상:</span>
       <select id="scopeSelect" class="custom-select" onchange="renderTable()">
         <option value="all">전체 통합 집계</option>
       </select>
-      <button class="btn btn-download" onclick="exportToExcel()">엑셀 파일(.xlsx) 다운로드</button>
+      <button class="btn-download" onclick="exportToExcel()">엑셀 다운로드</button>
     </div>
   </div>
 
   <div class="summary-cards" id="summaryCards" style="display:none;">
     <div class="card"><div class="label">총 예산현액 [I]</div><div class="value" id="sumBudget">0원</div></div>
-    <div class="card"><div class="label">실집행금액 (M - Q + S)</div><div class="value highlight-val" id="sumExec">0원</div></div>
-    <div class="card"><div class="label">전체 집행률</div><div class="value rate" id="sumRate">0.0%</div></div>
+    <div class="card"><div class="label">실집행금액 (M - Q + S)</div><div class="value point-green" id="sumExec">0원</div></div>
+    <div class="card"><div class="label">전체 집행률</div><div class="value point-green" id="sumRate">0.0%</div></div>
     <div class="card"><div class="label">예산 잔액 (I - 실집행)</div><div class="value" id="sumRemain">0원</div></div>
   </div>
 
@@ -152,12 +225,12 @@
     <table id="resultTable">
       <thead>
         <tr>
-          <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align: middle;">
+          <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align:middle; width:280px;">
             구 분 <span class="sort-icon" id="icon_name"></span>
           </th>
-          <th colspan="3" class="group-header" style="background:#f1f5f9;">단위과제카드</th>
+          <th colspan="3" class="group-header" style="background:#f0f2f5;">단위과제카드</th>
           <th colspan="4" class="group-header" style="background:#f8fafc;">일상경비교부액</th>
-          <th colspan="3" class="group-header" style="background:#eff6ff;">최종 집행 현황</th>
+          <th colspan="3" class="group-header" style="background:#eaf6ee; color:#02692e;">최종 집행 현황</th>
         </tr>
         <tr>
           <th class="sortable" data-key="budget" onclick="handleHeaderClick('budget')">예산현액 [I] <span class="sort-icon" id="icon_budget"></span></th>
@@ -167,19 +240,23 @@
           <th class="sortable" data-key="grantQ" onclick="handleHeaderClick('grantQ')">교부액 [Q] <span class="sort-icon" id="icon_grantQ"></span></th>
           <th class="sortable" data-key="actR" onclick="handleHeaderClick('actR')">원인행위액 [R] <span class="sort-icon" id="icon_actR"></span></th>
           <th class="sortable" data-key="expS" onclick="handleHeaderClick('expS')">지출액 [S] <span class="sort-icon" id="icon_expS"></span></th>
-          <th class="sortable" data-key="exec" onclick="handleHeaderClick('exec')" style="background:#e0e7ff; color:#1e3a8a;">
+          <th class="sortable" data-key="exec" onclick="handleHeaderClick('exec')" style="background:#e8f7ee; color:#02692e;">
             실집행금액 [M-Q+S] <span class="sort-icon" id="icon_exec"></span>
           </th>
-          <th class="sortable" data-key="rate" onclick="handleHeaderClick('rate')" style="background:#e0e7ff; color:#1e3a8a;">
+          <th class="sortable" data-key="rate" onclick="handleHeaderClick('rate')" style="background:#e8f7ee; color:#02692e;">
             집행률 <span class="sort-icon" id="icon_rate"></span>
           </th>
-          <th class="sortable" data-key="remain" onclick="handleHeaderClick('remain')" style="background:#e0e7ff; color:#1e3a8a;">
+          <th class="sortable" data-key="remain" onclick="handleHeaderClick('remain')" style="background:#e8f7ee; color:#02692e;">
             예산잔액 <span class="sort-icon" id="icon_remain"></span>
           </th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
+  </div>
+
+  <div class="footer">
+    부산광역시교육청창의융합교육원 예산 정리 프로그램 (20260903 1230 버전) | 문의: hola3927@korea.kr
   </div>
 </div>
 
@@ -223,8 +300,8 @@ const semokMap = {
 
 let loadedFilesData = [];
 let currentMode = 'bimok';
-let currentSortKey = 'name';   // 기본값: 구분순
-let currentSortOrder = 'asc';  // 기본값: 오름차순 (가나다/코드순)
+let currentSortKey = 'name';
+let currentSortOrder = 'asc';
 
 const fileInput = document.getElementById('fileInput');
 fileInput.addEventListener('change', (e) => {
@@ -232,11 +309,11 @@ fileInput.addEventListener('change', (e) => {
 });
 
 const dropZone = document.getElementById('dropZone');
-dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#2563eb'; });
-dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#93c5fd'; });
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#03C75A'; });
+dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#a7e3be'; });
 dropZone.addEventListener('drop', (e) => {
   e.preventDefault();
-  dropZone.style.borderColor = '#93c5fd';
+  dropZone.style.borderColor = '#a7e3be';
   if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
 });
 
@@ -269,7 +346,7 @@ function handleFiles(files) {
 
       processed++;
       if (processed === files.length) {
-        document.getElementById('fileListText').innerHTML = `<strong style="color:#059669;">총 ${files.length}개 파일 로드 완료</strong>`;
+        document.getElementById('fileListText').innerHTML = `<strong style="color:#029f45;">총 ${files.length}개 파일 로드 완료</strong>`;
         document.getElementById('controls').style.display = 'flex';
         document.getElementById('summaryCards').style.display = 'grid';
         document.getElementById('tableWrap').style.display = 'block';
@@ -352,29 +429,22 @@ function resetSortToDefault() {
 
 function changeMode(mode) {
   currentMode = mode;
-  document.querySelectorAll('.btn-group .btn').forEach(b => {
-    if (b.id.startsWith('btn')) b.classList.remove('active');
-  });
-  if (mode === 'bimok') document.getElementById('btnBimok').classList.add('active');
-  if (mode === 'semok') document.getElementById('btnSemok').classList.add('active');
-  if (mode === 'item')  document.getElementById('btnItem').classList.add('active');
+  document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById(`btn_${mode}`);
+  if (activeBtn) activeBtn.classList.add('active');
 
-  // 정리 방법 전환 시 기본 정렬(구분순/가나다순)로 자동 초기화
   resetSortToDefault();
   renderTable();
 }
 
 function handleHeaderClick(key) {
   if (currentSortKey === key) {
-    // 동일 컬럼 클릭 시 오름차순/내림차순 토글
     currentSortOrder = (currentSortOrder === 'asc') ? 'desc' : 'asc';
   } else {
     currentSortKey = key;
-    // 구분은 가나다순(asc), 금액 및 비율은 많은순(desc)이 기본 직관
     currentSortOrder = (key === 'name') ? 'asc' : 'desc';
   }
 
-  // 상단 드롭다운 값 동기화
   const sortSelect = document.getElementById('sortSelect');
   const targetVal = `${currentSortKey}_${currentSortOrder}`;
   const exists = Array.from(sortSelect.options).some(opt => opt.value === targetVal);
@@ -405,19 +475,40 @@ function renderTable() {
   const grouped = {};
   targetRows.forEach(r => {
     let key = "";
+    let sortName = "";
+    let htmlName = "";
+
     if (currentMode === 'bimok') {
       const name = bimokMap[r.bimokCode] || "기타";
       key = `[${r.bimokCode}] ${name}`;
+      sortName = r.bimokCode;
+      htmlName = `<span class="badge-sub">[${r.bimokCode}] ${name}</span>`;
     } else if (currentMode === 'semok') {
       const name = semokMap[r.semokCode] || (r.cRaw.replace(/\[\d+\]/, '').trim() || "기타");
       key = `[${r.semokCode}] ${name}`;
+      sortName = r.semokCode;
+      htmlName = `<span class="badge-sub">[${r.semokCode}] ${name}</span>`;
     } else if (currentMode === 'item') {
       key = r.businessItem;
+      sortName = r.businessItem;
+      htmlName = `<span class="badge-sub">${r.businessItem}</span>`;
+    } else if (currentMode === 'item_bimok') {
+      const name = bimokMap[r.bimokCode] || "기타";
+      key = `${r.businessItem} > [${r.bimokCode}] ${name}`;
+      sortName = `${r.businessItem}__${r.bimokCode}`;
+      htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.bimokCode}] ${name}</span>`;
+    } else if (currentMode === 'item_semok') {
+      const name = semokMap[r.semokCode] || (r.cRaw.replace(/\[\d+\]/, '').trim() || "기타");
+      key = `${r.businessItem} > [${r.semokCode}] ${name}`;
+      sortName = `${r.businessItem}__${r.semokCode}`;
+      htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.semokCode}] ${name}</span>`;
     }
 
     if (!grouped[key]) {
       grouped[key] = {
         name: key,
+        sortName: sortName,
+        htmlName: htmlName,
         budget: 0, actL: 0, expM: 0, distP: 0, grantQ: 0, actR: 0, expS: 0, exec: 0
       };
     }
@@ -431,28 +522,24 @@ function renderTable() {
     grouped[key].exec   += r.exec;
   });
 
-  // 집행률 및 잔액 계산
   const items = Object.values(grouped).map(item => {
     const rate = item.budget > 0 ? (item.exec / item.budget * 100) : 0;
     const remain = item.budget - item.exec;
     return { ...item, rate: rate, remain: remain };
   });
 
-  // 정렬 적용 (구분 가나다순 / 금액순 / 집행률순)
   items.sort((a, b) => {
-    let vA = a[currentSortKey];
-    let vB = b[currentSortKey];
-
     if (currentSortKey === 'name') {
       return currentSortOrder === 'asc' 
-        ? vA.localeCompare(vB, 'ko-KR', { numeric: true }) 
-        : vB.localeCompare(vA, 'ko-KR', { numeric: true });
+        ? a.sortName.localeCompare(b.sortName, 'ko-KR', { numeric: true }) 
+        : b.sortName.localeCompare(a.sortName, 'ko-KR', { numeric: true });
     } else {
+      let vA = a[currentSortKey];
+      let vB = b[currentSortKey];
       return currentSortOrder === 'asc' ? (vA - vB) : (vB - vA);
     }
   });
 
-  // 헤더 정렬 표시(▲ / ▼) 갱신
   document.querySelectorAll('.sortable').forEach(th => th.classList.remove('sort-active'));
   document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
 
@@ -482,29 +569,28 @@ function renderTable() {
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="text-left" style="font-weight:600;">${item.name}</td>
+      <td class="text-left">${item.htmlName}</td>
       <td>${item.budget.toLocaleString()}</td>
-      <td style="color:#64748b;">${item.actL.toLocaleString()}</td>
+      <td style="color:#718096;">${item.actL.toLocaleString()}</td>
       <td>${item.expM.toLocaleString()}</td>
-      <td style="color:#64748b;">${item.distP.toLocaleString()}</td>
+      <td style="color:#718096;">${item.distP.toLocaleString()}</td>
       <td>${item.grantQ.toLocaleString()}</td>
-      <td style="color:#64748b;">${item.actR.toLocaleString()}</td>
+      <td style="color:#718096;">${item.actR.toLocaleString()}</td>
       <td>${item.expS.toLocaleString()}</td>
-      <td class="highlight-val">${item.exec.toLocaleString()}</td>
-      <td style="font-weight:700; color:${item.rate >= 80 ? '#059669' : '#d97706'}">${rateStr}%</td>
+      <td class="highlight-cell">${item.exec.toLocaleString()}</td>
+      <td style="font-weight:700; color:${item.rate >= 80 ? '#029f45' : '#d97706'}">${rateStr}%</td>
       <td>${item.remain.toLocaleString()}</td>
     `;
     tbody.appendChild(tr);
   });
 
-  // 하단 합계 행
   const totalRate = tBudget > 0 ? ((tExec / tBudget) * 100).toFixed(1) : '0.0';
   const totalRemain = tBudget - tExec;
 
   const totalTr = document.createElement('tr');
   totalTr.className = 'total-row';
   totalTr.innerHTML = `
-    <td class="text-left">합 계</td>
+    <td class="text-left" style="text-align:center;">합 계</td>
     <td>${tBudget.toLocaleString()}</td>
     <td>${tActL.toLocaleString()}</td>
     <td>${tExpM.toLocaleString()}</td>
@@ -512,13 +598,12 @@ function renderTable() {
     <td>${tGrantQ.toLocaleString()}</td>
     <td>${tActR.toLocaleString()}</td>
     <td>${tExpS.toLocaleString()}</td>
-    <td class="highlight-val">${tExec.toLocaleString()}</td>
+    <td class="highlight-cell" style="color:#02692e;">${tExec.toLocaleString()}</td>
     <td>${totalRate}%</td>
     <td>${totalRemain.toLocaleString()}</td>
   `;
   tbody.appendChild(totalTr);
 
-  // 상단 요약 카드 갱신
   document.getElementById('sumBudget').textContent = tBudget.toLocaleString() + '원';
   document.getElementById('sumExec').textContent = tExec.toLocaleString() + '원';
   document.getElementById('sumRate').textContent = totalRate + '%';
@@ -528,10 +613,16 @@ function renderTable() {
 function exportToExcel() {
   const table = document.getElementById('resultTable');
   const wb = XLSX.utils.table_to_book(table, { sheet: "예산집행정리" });
-  const modeText = currentMode === 'bimok' ? '비목별' : (currentMode === 'semok' ? '세목별' : '사업항목별');
+  let modeText = "";
+  if (currentMode === 'bimok') modeText = '1-1_비목별';
+  else if (currentMode === 'semok') modeText = '1-2_세목별';
+  else if (currentMode === 'item') modeText = '2_사업항목별';
+  else if (currentMode === 'item_bimok') modeText = '2-1_사업항목내비목별';
+  else if (currentMode === 'item_semok') modeText = '2-2_사업항목내세목별';
+
   const scope = document.getElementById('scopeSelect').value;
   const scopeText = scope === 'all' ? '통합' : scope.replace(/\.[^/.]+$/, "");
-  XLSX.writeFile(wb, `예산정리_${scopeText}_${modeText}.xlsx`);
+  XLSX.writeFile(wb, `창의융합교육원_예산정리_${scopeText}_${modeText}_20260903.xlsx`);
 }
 </script>
 </body>
