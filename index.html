@@ -20,13 +20,19 @@
     --card-bg: #ffffff;
   }
   * { box-sizing: border-box; }
+  
+  /* 1. 드래그 및 텍스트 선택 원천 차단 */
   body {
     font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, sans-serif;
     margin: 0; padding: 20px 24px 40px; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.5;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   .container { max-width: 1440px; margin: 0 auto; }
 
-  /* 상단 헤더: 네이버네이버하고 + 약간 밤티나는 한컴 HWP 공문서 서식 스타일 */
+  /* 상단 헤더 */
   .header {
     background: var(--card-bg); padding: 20px 26px; border-radius: 8px;
     border: 1px solid var(--hwp-border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 16px;
@@ -54,7 +60,7 @@
   .feedback-btn:hover { border-color: var(--naver-green); color: var(--naver-green-dark); background: var(--naver-green-light); }
   .subtitle { margin: 0; color: var(--text-sub); font-size: 13px; }
 
-  /* HWP 스타일 안내 상자 */
+  /* HWP 공문서 스타일 안내 상자 */
   .guide-box {
     background-color: #fafbfc; border: 1px solid var(--hwp-border); border-left: 4px solid var(--naver-green);
     padding: 11px 16px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; line-height: 1.6; color: #333;
@@ -62,7 +68,7 @@
   .guide-box strong { color: var(--naver-green-dark); }
   .guide-box ol { margin: 3px 0 0 18px; padding: 0; }
 
-  /* 파일 드롭존 (네이버 첨부창 스타일) */
+  /* 파일 드롭존 */
   .drop-zone {
     border: 2px dashed #a7e3be; background: var(--card-bg); border-radius: 8px;
     padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; margin-bottom: 16px;
@@ -100,7 +106,7 @@
   }
   .btn-download:hover { background: var(--naver-green-dark); }
 
-  /* 요약 카드: 네이버페이 / 금융 대시보드 스타일 */
+  /* 요약 카드 */
   .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
   .card {
     background: var(--card-bg); padding: 16px 18px; border-radius: 8px; border: 1px solid var(--hwp-border);
@@ -110,7 +116,7 @@
   .card .value { font-size: 20px; font-weight: 700; color: #111; }
   .card .point-green { color: var(--naver-green-dark); }
 
-  /* 테이블 영역: HWP 공문서 표(격자 실선) 스타일 */
+  /* 테이블 영역 */
   .table-container {
     background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border-dark);
     box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;
@@ -134,15 +140,17 @@
   }
   .highlight-cell { font-weight: 700; color: #027a35; background-color: #f6fcf8; }
 
-  /* 배지 스타일 */
   .badge-item {
     background-color: #eef2f6; color: #2d3748; padding: 2px 6px; border-radius: 4px;
     font-size: 11.5px; font-weight: 600; border: 1px solid #d8e0e8; margin-right: 4px;
   }
   .badge-sub { font-weight: 600; color: #1a202c; }
 
-  /* 푸터 */
-  .footer { margin-top: 20px; text-align: center; font-size: 12px; color: var(--text-sub); }
+  /* 3. 법적 저작권 푸터 */
+  .footer {
+    padding: 24px 0 10px; border-top: 1px solid var(--hwp-border); margin-top: 36px;
+    text-align: center; font-size: 12px; color: var(--text-sub);
+  }
 </style>
 </head>
 <body>
@@ -150,9 +158,9 @@
   <div class="header">
     <div class="header-top">
       <div class="title-area">
-        <div class="logo-icon">창</div>
+        <div class="logo-icon">N</div>
         <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
-        <span class="version-badge">20260903 1230 버전</span>
+        <span class="version-badge">20260903 1230버전</span>
       </div>
       <a href="mailto:hola3927@korea.kr" class="feedback-btn" title="오류 제보 및 기능 제안">
         ✉ 피드백 및 문의: <strong>hola3927@korea.kr</strong>
@@ -255,12 +263,53 @@
     </table>
   </div>
 
+  <!-- 3. 법적 저작권 표기 강화 푸터 -->
   <div class="footer">
-    부산광역시교육청창의융합교육원 예산 정리 프로그램 (20260903 1230 버전) | 문의: hola3927@korea.kr
+    <p style="margin: 0 0 6px 0; font-weight: 700; color: #222;">
+      Copyright © 2026 부산광역시교육청창의융합교육원. All Rights Reserved.
+    </p>
+    <p style="margin: 0 0 5px 0;">
+      본 프로그램의 소스코드 및 산출 로직은 저작권법의 보호를 받으며, 무단 복제·도용·전재 및 배포 시 민·형사상 법적 불이익을 받을 수 있습니다.
+    </p>
+    <p style="margin: 0; color: #888;">
+      프로그램 버전: 20260903 1230버전 | 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: var(--naver-green-dark); font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
+    </p>
   </div>
 </div>
 
 <script>
+/* 1. 불펌 방지 조작 차단 스크립트 */
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert('보안 및 저작권 보호를 위해 마우스 우클릭이 제한되어 있습니다.');
+});
+
+document.addEventListener('keydown', function(e) {
+  // F12 개발자 도구 차단
+  if (e.key === 'F12' || e.keyCode === 123) {
+    e.preventDefault();
+    return false;
+  }
+  // Ctrl 관련 단축키 차단
+  if (e.ctrlKey) {
+    // Ctrl + U (소스보기), Ctrl + S (저장), Ctrl + C (복사)
+    if (e.key === 'u' || e.key === 'U' || e.keyCode === 85 ||
+        e.key === 's' || e.key === 'S' || e.keyCode === 83 ||
+        e.key === 'c' || e.key === 'C' || e.keyCode === 67) {
+      e.preventDefault();
+      alert('보안 및 저작권 보호를 위해 소스 열람 및 복사가 제한되어 있습니다.');
+      return false;
+    }
+    // Ctrl + Shift + I / J / C (개발자 도구 콘솔/검사기)
+    if (e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73 ||
+                       e.key === 'J' || e.key === 'j' || e.keyCode === 74 ||
+                       e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
+      e.preventDefault();
+      return false;
+    }
+  }
+});
+
 const bimokMap = {
   "110": "인건비", "210": "운영비", "220": "여비", "230": "업무추진비", "240": "복리후생비", "250": "직무수행경비",
   "260": "연구개발비", "280": "경상교육지원사업비", "310": "보전금", "320": "민간이전", "330": "자치단체등이전",
