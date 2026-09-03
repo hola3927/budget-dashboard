@@ -19,10 +19,11 @@
     --text-main: #1e2022;
     --text-sub: #636b73;
     --card-bg: #ffffff;
+    --blue-accent: #2563eb;
+    --blue-light: #eff6ff;
   }
   * { box-sizing: border-box; }
   
-  /* 드래그 및 텍스트 선택 원천 차단 */
   body {
     font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, sans-serif;
     margin: 0; padding: 20px 24px 40px; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.5;
@@ -31,7 +32,7 @@
     -ms-user-select: none;
     user-select: none;
   }
-  .container { max-width: 1440px; margin: 0 auto; }
+  .container { max-width: 1560px; margin: 0 auto; }
 
   /* 상단 헤더 */
   .header {
@@ -61,7 +62,6 @@
   .feedback-btn:hover { border-color: var(--naver-green); color: var(--naver-green-dark); background: var(--naver-green-light); }
   .subtitle { margin: 0; color: var(--text-sub); font-size: 13px; }
 
-  /* HWP 공문서 스타일 안내 상자 */
   .guide-box {
     background-color: #fafbfc; border: 1px solid var(--hwp-border); border-left: 4px solid var(--naver-green);
     padding: 11px 16px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; line-height: 1.6; color: #333;
@@ -69,7 +69,7 @@
   .guide-box strong { color: var(--naver-green-dark); }
   .guide-box ol { margin: 3px 0 0 18px; padding: 0; }
 
-  /* 파일 드롭존 */
+  /* 드롭존 */
   .drop-zone {
     border: 2px dashed #a7e3be; background: var(--card-bg); border-radius: 8px;
     padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; margin-bottom: 16px;
@@ -81,50 +81,83 @@
   /* 컨트롤 바 */
   .controls {
     background: var(--card-bg); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--hwp-border);
-    display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;
+    display: flex; flex-direction: column; gap: 12px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.03); margin-bottom: 16px;
   }
-  .tab-group-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .tab-subgroup { display: flex; align-items: center; gap: 6px; }
+  .controls-row {
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;
+  }
+  .tab-group-wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .tab-subgroup { display: flex; align-items: center; gap: 5px; }
   .subgroup-label { font-size: 12px; font-weight: 700; color: #444; background: #eaedf1; padding: 4px 8px; border-radius: 4px; }
   
   .btn-tab {
-    border: 1px solid var(--hwp-border); background: white; padding: 6px 12px;
-    border-radius: 5px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: 0.12s; color: #333;
+    border: 1px solid var(--hwp-border); background: white; padding: 6px 11px;
+    border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.12s; color: #333;
   }
   .btn-tab:hover { background-color: #f1f3f5; }
   .btn-tab.active { background: var(--naver-green); color: white; border-color: var(--naver-green); }
 
+  /* 기준 선택 토글 버튼 */
+  .base-toggle-wrap { display: flex; align-items: center; gap: 6px; }
+  .btn-base {
+    border: 1px solid var(--hwp-border); background: white; padding: 6px 12px;
+    border-radius: 5px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: 0.15s; color: #444;
+  }
+  .btn-base:hover { background-color: #f8fafc; }
+  .btn-base.active-real {
+    background: var(--naver-green); color: white; border-color: var(--naver-green-dark);
+  }
+  .btn-base.active-act {
+    background: var(--blue-accent); color: white; border-color: #1d4ed8;
+  }
+
   select.custom-select {
     padding: 6px 10px; border-radius: 5px; border: 1px solid var(--hwp-border);
-    font-size: 12.5px; background-color: white; color: var(--text-main); outline: none;
+    font-size: 12px; background-color: white; color: var(--text-main); outline: none;
   }
   select.custom-select:focus { border-color: var(--naver-green); }
 
+  .action-buttons { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn-hwp {
+    background: #4b5563; color: white; border: 1px solid #374151;
+    padding: 6px 13px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .btn-hwp:hover { background: #374151; }
+  
   .btn-download {
     background: var(--naver-green); color: white; border: 1px solid var(--naver-green-dark);
-    padding: 6px 14px; border-radius: 5px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: 0.15s;
-    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
+    display: inline-flex; align-items: center; gap: 5px;
   }
   .btn-download:hover { background: var(--naver-green-dark); }
 
+  .btn-reset-pending {
+    background: white; color: #e11d48; border: 1px solid #fca5a5;
+    padding: 5px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 600; cursor: pointer;
+  }
+  .btn-reset-pending:hover { background: #fff1f2; }
+
   /* 요약 카드 */
-  .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .summary-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
   .card {
-    background: var(--card-bg); padding: 16px 18px; border-radius: 8px; border: 1px solid var(--hwp-border);
+    background: var(--card-bg); padding: 14px 16px; border-radius: 8px; border: 1px solid var(--hwp-border);
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   }
-  .card .label { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
-  .card .value { font-size: 20px; font-weight: 700; color: #111; }
+  .card .label { font-size: 11.5px; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
+  .card .value { font-size: 18px; font-weight: 700; color: #111; }
   .card .point-green { color: var(--naver-green-dark); }
+  .card .point-blue { color: var(--blue-accent); }
+  .card .point-orange { color: #d97706; }
 
   /* 테이블 영역 */
   .table-container {
     background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border-dark);
     box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;
   }
-  table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; min-width: 1100px; }
-  th, td { padding: 7px 9px; border: 1px solid var(--hwp-border); white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; min-width: 1280px; }
+  th, td { padding: 6px 8px; border: 1px solid var(--hwp-border); white-space: nowrap; }
   th { background: var(--hwp-header-bg); font-weight: 700; color: #2b3036; text-align: center; }
   th.group-header { border-bottom: 1px solid var(--hwp-border-dark); font-size: 11.5px; }
   
@@ -142,13 +175,23 @@
   }
   .highlight-cell { font-weight: 700; color: #027a35; background-color: #f6fcf8; }
 
+  /* 지출예정액 입력 인풋 */
+  .input-pending {
+    width: 105px; padding: 4px 6px; font-size: 12px; text-align: right;
+    border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: #1e293b;
+    outline: none; transition: 0.15s; -webkit-user-select: text; user-select: text;
+  }
+  .input-pending:focus {
+    border-color: var(--naver-green); box-shadow: 0 0 0 2px rgba(3, 199, 90, 0.2); background-color: #fff;
+  }
+
   .badge-item {
     background-color: #eef2f6; color: #2d3748; padding: 2px 6px; border-radius: 4px;
     font-size: 11.5px; font-weight: 600; border: 1px solid #d8e0e8; margin-right: 4px;
   }
   .badge-sub { font-weight: 600; color: #1a202c; }
 
-  /* 법적 저작권 푸터 */
+  /* 푸터 */
   .footer {
     padding: 24px 0 10px; border-top: 1px solid var(--hwp-border); margin-top: 36px;
     text-align: center; font-size: 12px; color: var(--text-sub);
@@ -162,21 +205,21 @@
       <div class="title-area">
         <div class="logo-icon">창</div>
         <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
-        <span class="version-badge">20260903 1230버전</span>
+        <span class="version-badge">20260903 최종판</span>
       </div>
       <a href="mailto:hola3927@korea.kr" class="feedback-btn" title="오류 제보 및 기능 제안">
         ✉ 피드백 및 문의: <strong>hola3927@korea.kr</strong>
       </a>
     </div>
-    <p class="subtitle">K-에듀파인 [예산현액] 엑셀 파일을 일괄 정리하여 비목별 / 세목별 / 사업항목별 실집행 현황을 산출합니다.</p>
+    <p class="subtitle">K-에듀파인 예산현액 엑셀 파일을 일괄 분석하여 실집행/원인행위 기준 분류 및 지출대기액 시뮬레이션을 제공합니다.</p>
     
     <div class="guide-box">
-      <strong>K-에듀파인 엑셀 파일 다운로드 방법</strong>
+      <strong>K-에듀파인 엑셀 파일 다운로드 방법 안내</strong>
       <ol>
         <li>K-에듀파인 > 재정사업관리 > 사업담당재정관리 > 예산관리 > 예산편성 > 사업관리카드</li>
         <li>조회 후 정리할 사업관리카드(단위과제카드) 번호 클릭</li>
         <li>상단 <strong>[예산현액]</strong> 탭 클릭 후 <strong>"일상경비 포함" 체크박스 선택</strong></li>
-        <li>우측 상단 <strong>[파일]</strong> 버튼을 클릭하여 엑셀 다운로드</li>
+        <li>우측 상단 <strong>[파일]</strong> 버튼을 클릭하여 엑셀 다운로드 (다중 파일 지원)</li>
       </ol>
     </div>
   </div>
@@ -185,75 +228,104 @@
     <input type="file" id="fileInput" multiple accept=".xlsx, .xls">
     <div class="drop-zone-icon">📥</div>
     <strong style="font-size:14.5px; color:#222;">K-에듀파인 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭하여 선택하세요</strong>
-    <div id="fileListText" style="margin-top: 5px; color: var(--text-sub); font-size: 12.5px;">여러 개의 엑셀 파일을 한 번에 선택하여 일괄 업로드할 수 있습니다.</div>
+    <div id="fileListText" style="margin-top: 5px; color: var(--text-sub); font-size: 12.5px;">여러 개의 단위과제카드 엑셀 파일을 한 번에 업로드할 수 있습니다.</div>
   </div>
 
   <div class="controls" id="controls" style="display:none;">
-    <div class="tab-group-wrap">
-      <div class="tab-subgroup">
-        <span class="subgroup-label">1. 비목 기준</span>
-        <button class="btn-tab active" id="btn_bimok" onclick="changeMode('bimok')">1-1. 비목별</button>
-        <button class="btn-tab" id="btn_semok" onclick="changeMode('semok')">1-2. 세목별</button>
+    <!-- 1행: 집행 기준 선택 및 정렬/필터 -->
+    <div class="controls-row">
+      <div class="base-toggle-wrap">
+        <span class="subgroup-label">📊 집행 산출 기준</span>
+        <button class="btn-base active-real" id="btnBaseReal" onclick="setExecBase('real')">
+          🟢 실집행금액 기준 [지출액 M - 교부액 Q + 지출액 S]
+        </button>
+        <button class="btn-base" id="btnBaseAct" onclick="setExecBase('act')">
+          🔵 원인행위액 기준 [원인행위 L - 배부액 P + 원인행위 R]
+        </button>
       </div>
-      <div class="tab-subgroup">
-        <span class="subgroup-label">2. 사업항목 기준</span>
-        <button class="btn-tab" id="btn_item" onclick="changeMode('item')">2. 사업항목별</button>
-        <button class="btn-tab" id="btn_item_bimok" onclick="changeMode('item_bimok')">2-1. 사업항목 내 비목별</button>
-        <button class="btn-tab" id="btn_item_semok" onclick="changeMode('item_semok')">2-2. 사업항목 내 세목별</button>
+
+      <div class="action-buttons">
+        <button class="btn-reset-pending" onclick="resetAllPending()" title="입력된 지출예정액을 모두 0으로 초기화합니다.">🔄 지출예정액 초기화</button>
+        <button class="btn-hwp" onclick="copyForHWP()">📋 한글(HWP) 표 복사</button>
+        <button class="btn-download" onclick="exportToExcel()">📊 엑셀 정식 서식 다운로드</button>
       </div>
     </div>
 
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-      <span style="font-size: 12px; font-weight: bold; color: #444;">정렬:</span>
-      <select id="sortSelect" class="custom-select" onchange="onSortSelectChange()">
-        <option value="name_asc">구분 순 (기본값 / 가나다·코드순)</option>
-        <option value="budget_desc">예산현액 많은 순</option>
-        <option value="exec_desc">실집행금액 많은 순</option>
-        <option value="expM_desc">지출액[M] 많은 순</option>
-        <option value="rate_desc">집행률 높은 순</option>
-        <option value="remain_desc">예산잔액 많은 순</option>
-        <option value="rate_asc">집행률 낮은 순</option>
-        <option value="budget_asc">예산현액 적은 순</option>
-      </select>
+    <!-- 2행: 분류 모드 탭 및 정렬 기준 -->
+    <div class="controls-row">
+      <div class="tab-group-wrap">
+        <div class="tab-subgroup">
+          <span class="subgroup-label">1. 비목 기준</span>
+          <button class="btn-tab active" id="btn_bimok" onclick="changeMode('bimok')">1-1. 비목별</button>
+          <button class="btn-tab" id="btn_semok" onclick="changeMode('semok')">1-2. 세목별</button>
+        </div>
+        <div class="tab-subgroup">
+          <span class="subgroup-label">2. 사업항목 기준</span>
+          <button class="btn-tab" id="btn_item" onclick="changeMode('item')">2. 사업항목별</button>
+          <button class="btn-tab" id="btn_item_bimok" onclick="changeMode('item_bimok')">2-1. 사업항목 내 비목별</button>
+          <button class="btn-tab" id="btn_item_semok" onclick="changeMode('item_semok')">2-2. 사업항목 내 세목별</button>
+        </div>
+      </div>
 
-      <span style="font-size: 12px; font-weight: bold; color: #444; margin-left:4px;">대상:</span>
-      <select id="scopeSelect" class="custom-select" onchange="renderTable()">
-        <option value="all">전체 통합 집계</option>
-      </select>
-      <button class="btn-download" onclick="exportToExcel()">📊 엑셀 정식 서식 다운로드</button>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span style="font-size: 12px; font-weight: bold; color: #444;">정렬:</span>
+        <select id="sortSelect" class="custom-select" onchange="onSortSelectChange()">
+          <option value="name_asc">구분 순 (기본값 / 가나다·코드순)</option>
+          <option value="budget_desc">예산현액 많은 순</option>
+          <option value="exec_desc">집행금액 많은 순</option>
+          <option value="rate_desc">최종집행률 높은 순</option>
+          <option value="remain_desc">예산잔액 많은 순</option>
+          <option value="rate_asc">최종집행률 낮은 순</option>
+          <option value="budget_asc">예산현액 적은 순</option>
+        </select>
+
+        <span style="font-size: 12px; font-weight: bold; color: #444; margin-left:4px;">대상:</span>
+        <select id="scopeSelect" class="custom-select" onchange="renderTable()">
+          <option value="all">전체 통합 집계</option>
+        </select>
+      </div>
     </div>
   </div>
 
+  <!-- 요약 카드 (지출대기액 및 최종 잔액 실시간 반영) -->
   <div class="summary-cards" id="summaryCards" style="display:none;">
     <div class="card"><div class="label">총 예산현액 [I]</div><div class="value" id="sumBudget">0원</div></div>
-    <div class="card"><div class="label">실집행금액 (M - Q + S)</div><div class="value point-green" id="sumExec">0원</div></div>
-    <div class="card"><div class="label">전체 집행률</div><div class="value point-green" id="sumRate">0.0%</div></div>
-    <div class="card"><div class="label">예산 잔액 (I - 실집행)</div><div class="value" id="sumRemain">0원</div></div>
+    <div class="card"><div class="label" id="cardLabelExec">실집행금액 (M - Q + S)</div><div class="value point-green" id="sumExec">0원</div></div>
+    <div class="card"><div class="label">총 지출대기액(예정액)</div><div class="value point-orange" id="sumPending">0원</div></div>
+    <div class="card"><div class="label">최종 집행률 (대기반영)</div><div class="value point-green" id="sumRate">0.0%</div></div>
+    <div class="card"><div class="label">최종 예산잔액 (대기반영)</div><div class="value" id="sumRemain">0원</div></div>
   </div>
 
+  <!-- 결과 테이블 -->
   <div class="table-container" id="tableWrap" style="display:none;">
     <table id="resultTable">
       <thead>
         <tr>
-          <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align:middle; width:280px;">
+          <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align:middle; width:260px;">
             구 분 <span class="sort-icon" id="icon_name"></span>
           </th>
           <th colspan="3" class="group-header" style="background:#f0f2f5;">단위과제카드</th>
           <th colspan="4" class="group-header" style="background:#f8fafc;">일상경비교부액</th>
-          <th colspan="3" class="group-header" style="background:#eaf6ee; color:#02692e;">최종 집행 현황</th>
+          <th colspan="4" class="group-header" id="thGroupFinal" style="background:#eaf6ee; color:#02692e;">
+            최종 집행 현황 (실집행금액 기준)
+          </th>
         </tr>
         <tr>
           <th class="sortable" data-key="budget" onclick="handleHeaderClick('budget')">예산현액 [I] <span class="sort-icon" id="icon_budget"></span></th>
-          <th class="sortable" data-key="actL" onclick="handleHeaderClick('actL')">원인행위액 [L] <span class="sort-icon" id="icon_actL"></span></th>
+          <th class="sortable" data-key="actL" onclick="handleHeaderClick('actL')">원인행위 [L] <span class="sort-icon" id="icon_actL"></span></th>
           <th class="sortable" data-key="expM" onclick="handleHeaderClick('expM')">지출액 [M] <span class="sort-icon" id="icon_expM"></span></th>
           <th class="sortable" data-key="distP" onclick="handleHeaderClick('distP')">배부액 [P] <span class="sort-icon" id="icon_distP"></span></th>
           <th class="sortable" data-key="grantQ" onclick="handleHeaderClick('grantQ')">교부액 [Q] <span class="sort-icon" id="icon_grantQ"></span></th>
-          <th class="sortable" data-key="actR" onclick="handleHeaderClick('actR')">원인행위액 [R] <span class="sort-icon" id="icon_actR"></span></th>
+          <th class="sortable" data-key="actR" onclick="handleHeaderClick('actR')">원인행위 [R] <span class="sort-icon" id="icon_actR"></span></th>
           <th class="sortable" data-key="expS" onclick="handleHeaderClick('expS')">지출액 [S] <span class="sort-icon" id="icon_expS"></span></th>
-          <th class="sortable" data-key="exec" onclick="handleHeaderClick('exec')" style="background:#e8f7ee; color:#02692e;">
+          
+          <th class="sortable" data-key="exec" onclick="handleHeaderClick('exec')" id="thColExec" style="background:#e8f7ee; color:#02692e;">
             실집행금액 [M-Q+S] <span class="sort-icon" id="icon_exec"></span>
           </th>
-          <th class="sortable" data-key="rate" onclick="handleHeaderClick('rate')" style="background:#e8f7ee; color:#02692e;">
+          <th style="background:#fff7ed; color:#c2410c; min-width:120px;">
+            지출대기액(예정액)
+          </th>
+          <th class="sortable" data-key="rate" onclick="handleHeaderClick('rate')" style="background:#e8f7ee; color:#02692e; min-width:90px;">
             집행률 <span class="sort-icon" id="icon_rate"></span>
           </th>
           <th class="sortable" data-key="remain" onclick="handleHeaderClick('remain')" style="background:#e8f7ee; color:#02692e;">
@@ -265,43 +337,31 @@
     </table>
   </div>
 
-  <!-- 법적 저작권 표기 강화 푸터 -->
   <div class="footer">
     <p style="margin: 0 0 6px 0; font-weight: 700; color: #222;">
       Copyright © 2026 부산광역시교육청창의융합교육원. All Rights Reserved.
     </p>
     <p style="margin: 0 0 5px 0;">
-      본 프로그램의 소스코드 및 산출 로직은 저작권법의 보호를 받으며, 무단 복제·도용·전재 및 배포 시 민·형사상 법적 불이익을 받을 수 있습니다.
+      본 프로그램의 소스코드 및 산출 로직은 저작권법의 보호를 받으며, 무단 복제·도용 및 배포 시 법적 조치가 취해질 수 있습니다.
     </p>
     <p style="margin: 0; color: #888;">
-      프로그램 버전: 20260903 1230버전 | 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: var(--naver-green-dark); font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
+      프로그램 버전: 20260903 최종판 | 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: var(--naver-green-dark); font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
     </p>
   </div>
 </div>
 
 <script>
-/* 불펌 방지 조작 차단 스크립트 */
+/* 보안 및 단축키 제어 (인풋창 내에서는 타이핑/단축키 허용) */
 document.addEventListener('contextmenu', function(e) {
+  if (e.target.tagName === 'INPUT') return;
   e.preventDefault();
-  alert('보안 및 저작권 보호를 위해 마우스 우클릭이 제한되어 있습니다.');
 });
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'F12' || e.keyCode === 123) {
-    e.preventDefault();
-    return false;
-  }
+  if (e.target.tagName === 'INPUT') return; // 인풋창 편집 시 차단 안 함
+  if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
   if (e.ctrlKey) {
-    if (e.key === 'u' || e.key === 'U' || e.keyCode === 85 ||
-        e.key === 's' || e.key === 'S' || e.keyCode === 83 ||
-        e.key === 'c' || e.key === 'C' || e.keyCode === 67) {
-      e.preventDefault();
-      alert('보안 및 저작권 보호를 위해 소스 열람 및 복사가 제한되어 있습니다.');
-      return false;
-    }
-    if (e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73 ||
-                       e.key === 'J' || e.key === 'j' || e.keyCode === 74 ||
-                       e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
+    if (['u', 's', 'c'].includes(e.key.toLowerCase())) {
       e.preventDefault();
       return false;
     }
@@ -350,7 +410,13 @@ let currentMode = 'bimok';
 let currentSortKey = 'name';
 let currentSortOrder = 'asc';
 
-// 엑셀 내보내기용 글로벌 데이터 저장소
+// 집행 기준 상태: 'real' (실집행 M-Q+S) vs 'act' (원인행위 L-P+R)
+let execBase = 'real';
+
+// 지출대기액(예정액) 저장소: { [cleanName]: number }
+let pendingAmountMap = {};
+
+// 내보내기/클립보드용 글로벌 데이터 캐시
 let currentExportPayload = null;
 
 const fileInput = document.getElementById('fileInput');
@@ -449,7 +515,11 @@ function parseEdufineSheet(sheetData, fileName) {
       const grantQ = num(16);      // Q열: 일상경비 교부액
       const actR   = num(17);      // R열: 일상경비 원인행위액
       const expS   = num(18);      // S열: 일상경비 지출액
-      const exec   = expM - grantQ + expS;
+
+      // 1. 실집행금액: 지출액 [M] - 교부액 [Q] + 지출액 [S]
+      const realExec = expM - grantQ + expS;
+      // 2. 원인행위액 기준: 단위과제 원인행위액 [L] - 배부액 [P] + 원인행위액 [R]
+      const actExec = actL - distP + actR;
 
       rows.push({
         fileName: fileName,
@@ -464,11 +534,38 @@ function parseEdufineSheet(sheetData, fileName) {
         grantQ: grantQ,
         actR: actR,
         expS: expS,
-        exec: exec
+        realExec: realExec,
+        actExec: actExec
       });
     }
   }
   return { cardName: currentCardName, rows: rows };
+}
+
+/* 집행 기준 전환 함수 (실집행 vs 원인행위) */
+function setExecBase(base) {
+  execBase = base;
+  const btnReal = document.getElementById('btnBaseReal');
+  const btnAct = document.getElementById('btnBaseAct');
+  const thGroupFinal = document.getElementById('thGroupFinal');
+  const thColExec = document.getElementById('thColExec');
+  const cardLabelExec = document.getElementById('cardLabelExec');
+
+  if (base === 'real') {
+    btnReal.className = 'btn-base active-real';
+    btnAct.className = 'btn-base';
+    thGroupFinal.textContent = '최종 집행 현황 (실집행금액 기준)';
+    thColExec.innerHTML = `실집행금액 [M-Q+S] <span class="sort-icon" id="icon_exec"></span>`;
+    cardLabelExec.textContent = '실집행금액 (M - Q + S)';
+  } else {
+    btnReal.className = 'btn-base';
+    btnAct.className = 'btn-base active-act';
+    thGroupFinal.textContent = '최종 집행 현황 (원인행위액 기준)';
+    thColExec.innerHTML = `집행금액(원인행위) [L-P+R] <span class="sort-icon" id="icon_exec"></span>`;
+    cardLabelExec.textContent = '집행금액 (원인행위: L - P + R)';
+  }
+
+  renderTable();
 }
 
 function resetSortToDefault() {
@@ -511,7 +608,22 @@ function onSortSelectChange() {
   renderTable();
 }
 
-function renderTable() {
+/* 지출대기액 입력 시 호출 */
+function onPendingInputChange(key, valStr) {
+  const numVal = parseFloat(valStr.replace(/,/g, '')) || 0;
+  pendingAmountMap[key] = numVal;
+  renderTable(true); // 입력 포커스 유지 렌더링
+}
+
+/* 지출대기액 전체 초기화 */
+function resetAllPending() {
+  if (confirm("모든 지출대기액(예정액) 입력을 0원으로 초기화하시겠습니까?")) {
+    pendingAmountMap = {};
+    renderTable();
+  }
+}
+
+function renderTable(keepFocus = false) {
   const scope = document.getElementById('scopeSelect').value;
   let targetRows = [];
 
@@ -566,25 +678,42 @@ function renderTable() {
         sortName: sortName,
         htmlName: htmlName,
         cleanName: cleanName,
-        budget: 0, actL: 0, expM: 0, distP: 0, grantQ: 0, actR: 0, expS: 0, exec: 0
+        budget: 0, actL: 0, expM: 0, distP: 0, grantQ: 0, actR: 0, expS: 0,
+        realExec: 0, actExec: 0
       };
     }
-    grouped[key].budget += r.budget;
-    grouped[key].actL   += r.actL;
-    grouped[key].expM   += r.expM;
-    grouped[key].distP  += r.distP;
-    grouped[key].grantQ += r.grantQ;
-    grouped[key].actR   += r.actR;
-    grouped[key].expS   += r.expS;
-    grouped[key].exec   += r.exec;
+    grouped[key].budget   += r.budget;
+    grouped[key].actL     += r.actL;
+    grouped[key].expM     += r.expM;
+    grouped[key].distP    += r.distP;
+    grouped[key].grantQ   += r.grantQ;
+    grouped[key].actR     += r.actR;
+    grouped[key].expS     += r.expS;
+    grouped[key].realExec += r.realExec;
+    grouped[key].actExec  += r.actExec;
   });
 
+  // 항목별 기준에 따른 집행액, 지출대기액 및 실시간 집행률/잔액 계산
   const items = Object.values(grouped).map(item => {
-    const rate = item.budget > 0 ? (item.exec / item.budget * 100) : 0;
-    const remain = item.budget - item.exec;
-    return { ...item, rate: rate, remain: remain };
+    const baseExec = (execBase === 'real') ? item.realExec : item.actExec;
+    const pending = pendingAmountMap[item.cleanName] || 0;
+    const totalExecWithPending = baseExec + pending;
+    
+    // 지출대기액을 반영한 실시간 집행률 및 잔액
+    const rate = item.budget > 0 ? (totalExecWithPending / item.budget * 100) : 0;
+    const remain = item.budget - totalExecWithPending;
+
+    return {
+      ...item,
+      exec: baseExec,
+      pending: pending,
+      totalExecWithPending: totalExecWithPending,
+      rate: rate,
+      remain: remain
+    };
   });
 
+  // 정렬 수행
   items.sort((a, b) => {
     if (currentSortKey === 'name') {
       return currentSortOrder === 'asc' 
@@ -597,6 +726,7 @@ function renderTable() {
     }
   });
 
+  // 헤더 정렬 표시 갱신
   document.querySelectorAll('.sortable').forEach(th => th.classList.remove('sort-active'));
   document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
 
@@ -607,22 +737,34 @@ function renderTable() {
     if (iconSpan) iconSpan.textContent = currentSortOrder === 'asc' ? ' ▲' : ' ▼';
   }
 
+  // 현재 포커스 엘리먼트 기억
+  const activeElementId = document.activeElement ? document.activeElement.id : null;
+
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
-  let tBudget = 0, tActL = 0, tExpM = 0, tDistP = 0, tGrantQ = 0, tActR = 0, tExpS = 0, tExec = 0;
+  let tBudget = 0, tActL = 0, tExpM = 0, tDistP = 0, tGrantQ = 0, tActR = 0, tExpS = 0;
+  let tExec = 0, tPending = 0;
 
-  items.forEach(item => {
-    tBudget += item.budget;
-    tActL   += item.actL;
-    tExpM   += item.expM;
-    tDistP  += item.distP;
-    tGrantQ += item.grantQ;
-    tActR   += item.actR;
-    tExpS   += item.expS;
-    tExec   += item.exec;
+  items.forEach((item, idx) => {
+    tBudget  += item.budget;
+    tActL    += item.actL;
+    tExpM    += item.expM;
+    tDistP   += item.distP;
+    tGrantQ  += item.grantQ;
+    tActR    += item.actR;
+    tExpS    += item.expS;
+    tExec    += item.exec;
+    tPending += item.pending;
 
     const rateStr = item.rate.toFixed(1);
+
+    // [반영 1] 집행률 셀 인라인 막대 시각화
+    const progressPercent = Math.min(Math.max(item.rate, 0), 100);
+    const barColor = item.rate >= 80 ? 'rgba(3, 199, 90, 0.18)' : 'rgba(217, 119, 6, 0.18)';
+    const rateTextColor = item.rate >= 80 ? '#029f45' : '#d97706';
+
+    const inputId = `input_pending_${idx}`;
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -635,14 +777,32 @@ function renderTable() {
       <td style="color:#718096;">${item.actR.toLocaleString()}</td>
       <td>${item.expS.toLocaleString()}</td>
       <td class="highlight-cell">${item.exec.toLocaleString()}</td>
-      <td style="font-weight:700; color:${item.rate >= 80 ? '#029f45' : '#d97706'}">${rateStr}%</td>
-      <td>${item.remain.toLocaleString()}</td>
+      <td style="text-align:center; background:#fffbeb;">
+        <input type="text" id="${inputId}" class="input-pending"
+          value="${item.pending ? item.pending.toLocaleString() : ''}"
+          placeholder="0"
+          onfocus="this.select()"
+          onchange="onPendingInputChange('${item.cleanName.replace(/'/g, "\\'")}', this.value)"
+        />
+      </td>
+      <td style="font-weight:700; background: linear-gradient(to right, ${barColor} ${progressPercent}%, transparent ${progressPercent}%); color: ${rateTextColor};">
+        ${rateStr}%
+      </td>
+      <td style="font-weight:600; color:${item.remain < 0 ? '#e11d48' : '#111'};">
+        ${item.remain.toLocaleString()}
+      </td>
     `;
     tbody.appendChild(tr);
   });
 
-  const totalRate = tBudget > 0 ? ((tExec / tBudget) * 100).toFixed(1) : '0.0';
-  const totalRemain = tBudget - tExec;
+  // 합계 행 계산
+  const totalExecWithPending = tExec + tPending;
+  const totalRate = tBudget > 0 ? ((totalExecWithPending / tBudget) * 100).toFixed(1) : '0.0';
+  const totalRemain = tBudget - totalExecWithPending;
+
+  const totalProgressPercent = Math.min(Math.max(parseFloat(totalRate), 0), 100);
+  const totalBarColor = totalRate >= 80 ? 'rgba(3, 199, 90, 0.22)' : 'rgba(217, 119, 6, 0.22)';
+  const totalTextColor = totalRate >= 80 ? '#029f45' : '#d97706';
 
   const totalTr = document.createElement('tr');
   totalTr.className = 'total-row';
@@ -656,17 +816,30 @@ function renderTable() {
     <td>${tActR.toLocaleString()}</td>
     <td>${tExpS.toLocaleString()}</td>
     <td class="highlight-cell" style="color:#02692e;">${tExec.toLocaleString()}</td>
-    <td>${totalRate}%</td>
-    <td>${totalRemain.toLocaleString()}</td>
+    <td style="text-align:right; padding-right:12px; color:#c2410c; font-weight:700;">${tPending.toLocaleString()}</td>
+    <td style="font-weight:700; background: linear-gradient(to right, ${totalBarColor} ${totalProgressPercent}%, transparent ${totalProgressPercent}%); color: ${totalTextColor};">
+      ${totalRate}%
+    </td>
+    <td style="font-weight:700; color:${totalRemain < 0 ? '#e11d48' : '#02692e'};">
+      ${totalRemain.toLocaleString()}
+    </td>
   `;
   tbody.appendChild(totalTr);
 
+  // 상단 요약 카드 업데이트
   document.getElementById('sumBudget').textContent = tBudget.toLocaleString() + '원';
   document.getElementById('sumExec').textContent = tExec.toLocaleString() + '원';
+  document.getElementById('sumPending').textContent = tPending.toLocaleString() + '원';
   document.getElementById('sumRate').textContent = totalRate + '%';
   document.getElementById('sumRemain').textContent = totalRemain.toLocaleString() + '원';
 
-  // 엑셀 내보내기용 최신 데이터 캐싱
+  // 포커스 복원 (지출예정액 입력 연속성 지원)
+  if (keepFocus && activeElementId) {
+    const el = document.getElementById(activeElementId);
+    if (el) el.focus();
+  }
+
+  // 캐싱
   let modeName = "1-1_비목별";
   if (currentMode === 'semok') modeName = '1-2_세목별';
   else if (currentMode === 'item') modeName = '2_사업항목별';
@@ -680,11 +853,36 @@ function renderTable() {
     totals: {
       budget: tBudget, actL: tActL, expM: tExpM, distP: tDistP,
       grantQ: tGrantQ, actR: tActR, expS: tExpS, exec: tExec,
-      rate: parseFloat(totalRate), remain: totalRemain
+      pending: tPending, rate: parseFloat(totalRate), remain: totalRemain
     },
     modeName: modeName,
-    scopeText: scopeText
+    scopeText: scopeText,
+    execBase: execBase
   };
+}
+
+/* [반영 1] 한글(HWP) 복사용 TSV 클립보드 복사 함수 (지출대기액 및 기준 완벽 반영) */
+function copyForHWP() {
+  if (!currentExportPayload || !currentExportPayload.items.length) {
+    alert("복사할 데이터가 없습니다. 먼저 엑셀 파일을 업로드해 주세요.");
+    return;
+  }
+  
+  const baseName = (currentExportPayload.execBase === 'real') ? "실집행금액" : "집행금액(원인행위)";
+  let tsv = `구분\t예산현액\t지출액\t${baseName}\t지출대기액\t최종집행률\t예산잔액\n`;
+
+  currentExportPayload.items.forEach(item => {
+    tsv += `${item.cleanName}\t${item.budget}\t${item.expM}\t${item.exec}\t${item.pending}\t${item.rate.toFixed(1)}%\t${item.remain}\n`;
+  });
+  
+  const tot = currentExportPayload.totals;
+  tsv += `합계\t${tot.budget}\t${tot.expM}\t${tot.exec}\t${tot.pending}\t${tot.rate.toFixed(1)}%\t${tot.remain}\n`;
+  
+  navigator.clipboard.writeText(tsv).then(() => {
+    alert("한글(HWP) 표 붙여넣기용 데이터가 클립보드에 복사되었습니다.\n\n한글 문서의 표 안을 블록 지정하거나 첫 번째 셀에 커서를 둔 후 [Ctrl + V]를 누르세요.");
+  }).catch(err => {
+    alert("클립보드 복사 중 오류가 발생했습니다. 브라우저 권한을 확인해 주세요.");
+  });
 }
 
 /* 고품질 엑셀(#,##0 서식 및 HWP 공문서 스타일) 전용 생성기 */
@@ -697,7 +895,6 @@ function exportToExcel() {
   const wb = XLSX.utils.book_new();
   const ws = {};
 
-  // 테두리 스타일 정의
   const borderThin = {
     top: { style: "thin", color: { rgb: "D3D8DF" } },
     bottom: { style: "thin", color: { rgb: "D3D8DF" } },
@@ -711,7 +908,7 @@ function exportToExcel() {
     right: { style: "thin", color: { rgb: "B8BFC7" } }
   };
 
-  // 1. 최상단 대제목 (Row 0)
+  // 1. 대제목 (Row 0)
   ws[XLSX.utils.encode_cell({ c: 0, r: 0 })] = {
     v: "부산광역시교육청창의융합교육원 예산 집행 현황",
     t: 's',
@@ -721,7 +918,7 @@ function exportToExcel() {
     }
   };
 
-  // 2. 부제목 및 메타정보 (Row 1)
+  // 2. 메타정보 (Row 1)
   const now = new Date();
   const dateStr = now.getFullYear() + "-" +
     String(now.getMonth() + 1).padStart(2, '0') + "-" +
@@ -729,7 +926,9 @@ function exportToExcel() {
     String(now.getHours()).padStart(2, '0') + ":" +
     String(now.getMinutes()).padStart(2, '0');
   
-  const metaText = `■ 정리기준: ${currentExportPayload.modeName}    |    ■ 집계대상: ${currentExportPayload.scopeText}    |    ■ 출력일시: ${dateStr}`;
+  const baseDesc = (currentExportPayload.execBase === 'real') ? "실집행금액기준[M-Q+S]" : "원인행위액기준[L-P+R]";
+  const metaText = `■ 산출기준: ${baseDesc}  |  ■ 정렬/분류: ${currentExportPayload.modeName}  |  ■ 집계대상: ${currentExportPayload.scopeText}  |  ■ 출력일시: ${dateStr}`;
+  
   ws[XLSX.utils.encode_cell({ c: 0, r: 1 })] = {
     v: metaText,
     t: 's',
@@ -739,15 +938,18 @@ function exportToExcel() {
     }
   };
 
-  // 3. 테이블 2단 헤더 생성 (Row 3, 4)
-  for (let c = 0; c <= 10; c++) {
+  // 3. 헤더 1단 (Row 3)
+  for (let c = 0; c <= 11; c++) {
     let bg = "F4F6F9";
     let color = "2B3036";
     let text = "";
     if (c === 0) text = "구 분";
     else if (c >= 1 && c <= 3) { text = "단위과제카드"; bg = "EDF2F7"; }
     else if (c >= 4 && c <= 7) { text = "일상경비교부액"; bg = "F7FAFC"; }
-    else if (c >= 8 && c <= 10) { text = "최종 집행 현황"; bg = "E6F4EA"; color = "02692E"; }
+    else if (c >= 8 && c <= 11) { 
+      text = (currentExportPayload.execBase === 'real') ? "최종 집행 현황 (실집행 기준)" : "최종 집행 현황 (원인행위 기준)";
+      bg = "E6F4EA"; color = "02692E"; 
+    }
 
     ws[XLSX.utils.encode_cell({ c: c, r: 3 })] = {
       v: text,
@@ -761,18 +963,21 @@ function exportToExcel() {
     };
   }
 
+  // 3-2. 헤더 2단 (Row 4)
+  const execColTitle = (currentExportPayload.execBase === 'real') ? "실집행금액 [M-Q+S]" : "집행금액 [L-P+R]";
   const h2_cols = [
     { c: 0, title: "구 분", bg: "F4F6F9", color: "2B3036" },
     { c: 1, title: "예산현액 [I]", bg: "EDF2F7", color: "2B3036" },
-    { c: 2, title: "원인행위액 [L]", bg: "EDF2F7", color: "2B3036" },
+    { c: 2, title: "원인행위 [L]", bg: "EDF2F7", color: "2B3036" },
     { c: 3, title: "지출액 [M]", bg: "EDF2F7", color: "2B3036" },
     { c: 4, title: "배부액 [P]", bg: "F7FAFC", color: "2B3036" },
     { c: 5, title: "교부액 [Q]", bg: "F7FAFC", color: "2B3036" },
-    { c: 6, title: "원인행위액 [R]", bg: "F7FAFC", color: "2B3036" },
+    { c: 6, title: "원인행위 [R]", bg: "F7FAFC", color: "2B3036" },
     { c: 7, title: "지출액 [S]", bg: "F7FAFC", color: "2B3036" },
-    { c: 8, title: "실집행금액 [M-Q+S]", bg: "E6F4EA", color: "02692E" },
-    { c: 9, title: "집행률", bg: "E6F4EA", color: "02692E" },
-    { c: 10, title: "예산잔액", bg: "E6F4EA", color: "02692E" }
+    { c: 8, title: execColTitle, bg: "E6F4EA", color: "02692E" },
+    { c: 9, title: "지출대기액", bg: "FFF7ED", color: "C2410C" },
+    { c: 10, title: "최종집행률", bg: "E6F4EA", color: "02692E" },
+    { c: 11, title: "예산잔액", bg: "E6F4EA", color: "02692E" }
   ];
 
   h2_cols.forEach(col => {
@@ -789,22 +994,22 @@ function exportToExcel() {
   });
 
   const merges = [
-    { s: { c: 0, r: 0 }, e: { c: 10, r: 0 } }, // 대제목 행 병합
-    { s: { c: 0, r: 1 }, e: { c: 10, r: 1 } }, // 메타정보 행 병합
-    { s: { c: 0, r: 3 }, e: { c: 0, r: 4 } },  // 구분 상하 병합
-    { s: { c: 1, r: 3 }, e: { c: 3, r: 3 } },  // 단위과제카드 좌우 병합
-    { s: { c: 4, r: 3 }, e: { c: 7, r: 3 } },  // 일상경비교부액 좌우 병합
-    { s: { c: 8, r: 3 }, e: { c: 10, r: 3 } }  // 최종 집행 현황 좌우 병합
+    { s: { c: 0, r: 0 }, e: { c: 11, r: 0 } },
+    { s: { c: 0, r: 1 }, e: { c: 11, r: 1 } },
+    { s: { c: 0, r: 3 }, e: { c: 0, r: 4 } },
+    { s: { c: 1, r: 3 }, e: { c: 3, r: 3 } },
+    { s: { c: 4, r: 3 }, e: { c: 7, r: 3 } },
+    { s: { c: 8, r: 3 }, e: { c: 11, r: 3 } }
   ];
 
-  // 4. 데이터 행 생성 (Row 5부터 시작)
+  // 4. 데이터 행 출력 (Row 5부터 시작)
   let currentRow = 5;
   currentExportPayload.items.forEach((item, idx) => {
     const isEven = idx % 2 === 1;
     const bg = isEven ? "FAFBFC" : "FFFFFF";
     const highlightBg = isEven ? "F0FBF4" : "F6FCF8";
 
-    // Col 0: 구분 (순수 텍스트)
+    // Col 0: 구분
     ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
       v: item.cleanName,
       t: 's',
@@ -816,7 +1021,7 @@ function exportToExcel() {
       }
     };
 
-    // Cols 1~7: 순수 숫자형 및 "#,##0" 서식 적용
+    // Cols 1~7: 단위과제 및 일상경비 원본 숫자
     const numFields = [item.budget, item.actL, item.expM, item.distP, item.grantQ, item.actR, item.expS];
     numFields.forEach((val, fIdx) => {
       ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
@@ -832,7 +1037,7 @@ function exportToExcel() {
       };
     });
 
-    // Col 8: 실집행금액 [M-Q+S]
+    // Col 8: 집행금액 (실집행 또는 원인행위)
     ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
       v: item.exec,
       t: 'n',
@@ -845,9 +1050,22 @@ function exportToExcel() {
       }
     };
 
-    // Col 9: 집행률 (엑셀 백분율 숫자형: 0.0%)
-    const rateDecimal = item.budget > 0 ? (item.exec / item.budget) : 0;
+    // Col 9: 지출대기액
     ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
+      v: item.pending,
+      t: 'n',
+      z: '#,##0',
+      s: {
+        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "C2410C" } },
+        fill: { fgColor: { rgb: "FFFBEB" } },
+        alignment: { horizontal: "right", vertical: "center" },
+        border: borderThin
+      }
+    };
+
+    // Col 10: 최종 집행률 (0.0% 서식)
+    const rateDecimal = item.budget > 0 ? (item.totalExecWithPending / item.budget) : 0;
+    ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
       v: rateDecimal,
       t: 'n',
       z: '0.0%',
@@ -859,13 +1077,13 @@ function exportToExcel() {
       }
     };
 
-    // Col 10: 예산잔액
-    ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
+    // Col 11: 예산잔액
+    ws[XLSX.utils.encode_cell({ c: 11, r: currentRow })] = {
       v: item.remain,
       t: 'n',
       z: '#,##0',
       s: {
-        font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "111111" } },
+        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: item.remain < 0 ? "E11D48" : "111111" } },
         fill: { fgColor: { rgb: highlightBg } },
         alignment: { horizontal: "right", vertical: "center" },
         border: borderThin
@@ -875,7 +1093,7 @@ function exportToExcel() {
     currentRow++;
   });
 
-  // 5. 회계 표준 복선 테두리 합계 행
+  // 5. 합계 행
   const tot = currentExportPayload.totals;
   const borderTotal = {
     top: { style: "thin", color: { rgb: "03C75A" } },
@@ -885,7 +1103,6 @@ function exportToExcel() {
   };
   const totBg = "EEF9F2";
 
-  // Col 0: 합계 라벨
   ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
     v: "합 계",
     t: 's',
@@ -897,7 +1114,6 @@ function exportToExcel() {
     }
   };
 
-  // Cols 1~7: 각 항목 합계
   const totNums = [tot.budget, tot.actL, tot.expM, tot.distP, tot.grantQ, tot.actR, tot.expS];
   totNums.forEach((val, fIdx) => {
     ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
@@ -913,7 +1129,7 @@ function exportToExcel() {
     };
   });
 
-  // Col 8: 실집행금액 합계
+  // 합계: 집행금액
   ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
     v: tot.exec,
     t: 'n',
@@ -926,9 +1142,22 @@ function exportToExcel() {
     }
   };
 
-  // Col 9: 전체 집행률 합계
-  const totalRateDec = tot.budget > 0 ? (tot.exec / tot.budget) : 0;
+  // 합계: 지출대기액
   ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
+    v: tot.pending,
+    t: 'n',
+    z: '#,##0',
+    s: {
+      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "C2410C" } },
+      fill: { fgColor: { rgb: totBg } },
+      alignment: { horizontal: "right", vertical: "center" },
+      border: borderTotal
+    }
+  };
+
+  // 합계: 최종 집행률
+  const totalRateDec = tot.budget > 0 ? ((tot.exec + tot.pending) / tot.budget) : 0;
+  ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
     v: totalRateDec,
     t: 'n',
     z: '0.0%',
@@ -940,8 +1169,8 @@ function exportToExcel() {
     }
   };
 
-  // Col 10: 전체 예산잔액 합계
-  ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
+  // 합계: 예산잔액
+  ws[XLSX.utils.encode_cell({ c: 11, r: currentRow })] = {
     v: tot.remain,
     t: 'n',
     z: '#,##0',
@@ -955,42 +1184,42 @@ function exportToExcel() {
 
   currentRow++;
 
-  // 6. 하단 각주 및 출처
-  currentRow++; // 빈 줄 구분
+  // 6. 하단 주석
+  currentRow++;
+  const formulaNote = (currentExportPayload.execBase === 'real') 
+    ? "* 실집행금액 = 단위과제 지출액[M] - 일상경비 교부액[Q] + 일상경비 지출액[S]" 
+    : "* 원인행위액 기준 집행액 = 단위과제 원인행위액[L] - 일상경비 배부액[P] + 일상경비 원인행위액[R]";
+  
   ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-    v: "* 실집행금액 = 단위과제 지출액[M] - 일상경비 교부액[Q] + 일상경비 지출액[S]",
+    v: formulaNote,
     t: 's',
     s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "777777" } } }
   };
   currentRow++;
   ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-    v: "* 작성기준: 부산광역시교육청창의융합교육원 예산 정리 프로그램 (20260903 1230버전)",
+    v: "* 최종집행률 및 잔액은 [지출대기액(예정액)]이 포함되어 실시간 계산된 결과입니다.",
     t: 's',
     s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "777777" } } }
   };
 
-  // 엑셀 워크시트 속성(열 너비, 행 높이, 영역) 바인딩
-  ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: 10, r: currentRow } });
+  ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: 11, r: currentRow } });
   ws['!merges'] = merges;
   ws['!cols'] = [
-    { wch: 34 }, // Col A: 구분 (긴 사업항목/세목명 완벽 수용)
-    { wch: 17 }, // Col B: 예산현액
-    { wch: 16 }, // Col C: 단위원인행위액
-    { wch: 16 }, // Col D: 단위지출액
-    { wch: 16 }, // Col E: 일상배부액
-    { wch: 16 }, // Col F: 일상교부액
-    { wch: 16 }, // Col G: 일상원인행위액
-    { wch: 16 }, // Col H: 일상지출액
-    { wch: 19 }, // Col I: 실집행금액
-    { wch: 13 }, // Col J: 집행률
-    { wch: 17 }  // Col K: 예산잔액
+    { wch: 34 }, // 구분
+    { wch: 17 }, // 예산현액
+    { wch: 15 }, // 단위원인
+    { wch: 15 }, // 단위지출
+    { wch: 15 }, // 일상배부
+    { wch: 15 }, // 일상교부
+    { wch: 15 }, // 일상원인
+    { wch: 15 }, // 일상지출
+    { wch: 18 }, // 집행금액
+    { wch: 15 }, // 지출대기액
+    { wch: 13 }, // 최종집행률
+    { wch: 17 }  // 예산잔액
   ];
   ws['!rows'] = [
-    { hpt: 32 }, // R0: 대제목
-    { hpt: 20 }, // R1: 메타정보
-    { hpt: 10 }, // R2: 빈 줄
-    { hpt: 22 }, // R3: 헤더 1단
-    { hpt: 22 }, // R4: 헤더 2단
+    { hpt: 32 }, { hpt: 20 }, { hpt: 10 }, { hpt: 22 }, { hpt: 22 }
   ];
   for (let i = 5; i < currentRow - 3; i++) {
     ws['!rows'].push({ hpt: 20 });
@@ -999,7 +1228,7 @@ function exportToExcel() {
 
   XLSX.utils.book_append_sheet(wb, ws, "예산집행정리");
 
-  const fileName = `창의융합교육원_예산정리_${currentExportPayload.scopeText}_${currentExportPayload.modeName}_20260903.xlsx`;
+  const fileName = `창의융합교육원_예산정리_${currentExportPayload.scopeText}_${currentExportPayload.modeName}_${currentExportPayload.execBase}.xlsx`;
   XLSX.writeFile(wb, fileName);
 }
 </script>
