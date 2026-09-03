@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>부산창의융합교육원 예산 정리 프로그램</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- 엑셀 스타일 및 숫자 서식 완벽 지원 라이브러리 -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
   :root {
     --naver-green: #03C75A;
@@ -21,7 +22,7 @@
   }
   * { box-sizing: border-box; }
   
-  /* 1. 드래그 및 텍스트 선택 원천 차단 */
+  /* 드래그 및 텍스트 선택 원천 차단 */
   body {
     font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, sans-serif;
     margin: 0; padding: 20px 24px 40px; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.5;
@@ -103,6 +104,7 @@
   .btn-download {
     background: var(--naver-green); color: white; border: 1px solid var(--naver-green-dark);
     padding: 6px 14px; border-radius: 5px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
   }
   .btn-download:hover { background: var(--naver-green-dark); }
 
@@ -146,7 +148,7 @@
   }
   .badge-sub { font-weight: 600; color: #1a202c; }
 
-  /* 3. 법적 저작권 푸터 */
+  /* 법적 저작권 푸터 */
   .footer {
     padding: 24px 0 10px; border-top: 1px solid var(--hwp-border); margin-top: 36px;
     text-align: center; font-size: 12px; color: var(--text-sub);
@@ -158,7 +160,7 @@
   <div class="header">
     <div class="header-top">
       <div class="title-area">
-        <div class="logo-icon">N</div>
+        <div class="logo-icon">창</div>
         <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
         <span class="version-badge">20260903 1230버전</span>
       </div>
@@ -218,7 +220,7 @@
       <select id="scopeSelect" class="custom-select" onchange="renderTable()">
         <option value="all">전체 통합 집계</option>
       </select>
-      <button class="btn-download" onclick="exportToExcel()">엑셀 다운로드</button>
+      <button class="btn-download" onclick="exportToExcel()">📊 엑셀 정식 서식 다운로드</button>
     </div>
   </div>
 
@@ -263,7 +265,7 @@
     </table>
   </div>
 
-  <!-- 3. 법적 저작권 표기 강화 푸터 -->
+  <!-- 법적 저작권 표기 강화 푸터 -->
   <div class="footer">
     <p style="margin: 0 0 6px 0; font-weight: 700; color: #222;">
       Copyright © 2026 부산광역시교육청창의융합교육원. All Rights Reserved.
@@ -278,21 +280,18 @@
 </div>
 
 <script>
-/* 1. 불펌 방지 조작 차단 스크립트 */
+/* 불펌 방지 조작 차단 스크립트 */
 document.addEventListener('contextmenu', function(e) {
   e.preventDefault();
   alert('보안 및 저작권 보호를 위해 마우스 우클릭이 제한되어 있습니다.');
 });
 
 document.addEventListener('keydown', function(e) {
-  // F12 개발자 도구 차단
   if (e.key === 'F12' || e.keyCode === 123) {
     e.preventDefault();
     return false;
   }
-  // Ctrl 관련 단축키 차단
   if (e.ctrlKey) {
-    // Ctrl + U (소스보기), Ctrl + S (저장), Ctrl + C (복사)
     if (e.key === 'u' || e.key === 'U' || e.keyCode === 85 ||
         e.key === 's' || e.key === 'S' || e.keyCode === 83 ||
         e.key === 'c' || e.key === 'C' || e.keyCode === 67) {
@@ -300,7 +299,6 @@ document.addEventListener('keydown', function(e) {
       alert('보안 및 저작권 보호를 위해 소스 열람 및 복사가 제한되어 있습니다.');
       return false;
     }
-    // Ctrl + Shift + I / J / C (개발자 도구 콘솔/검사기)
     if (e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73 ||
                        e.key === 'J' || e.key === 'j' || e.keyCode === 74 ||
                        e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
@@ -351,6 +349,9 @@ let loadedFilesData = [];
 let currentMode = 'bimok';
 let currentSortKey = 'name';
 let currentSortOrder = 'asc';
+
+// 엑셀 내보내기용 글로벌 데이터 저장소
+let currentExportPayload = null;
 
 const fileInput = document.getElementById('fileInput');
 fileInput.addEventListener('change', (e) => {
@@ -526,31 +527,37 @@ function renderTable() {
     let key = "";
     let sortName = "";
     let htmlName = "";
+    let cleanName = "";
 
     if (currentMode === 'bimok') {
       const name = bimokMap[r.bimokCode] || "기타";
       key = `[${r.bimokCode}] ${name}`;
       sortName = r.bimokCode;
       htmlName = `<span class="badge-sub">[${r.bimokCode}] ${name}</span>`;
+      cleanName = `[${r.bimokCode}] ${name}`;
     } else if (currentMode === 'semok') {
       const name = semokMap[r.semokCode] || (r.cRaw.replace(/\[\d+\]/, '').trim() || "기타");
       key = `[${r.semokCode}] ${name}`;
       sortName = r.semokCode;
       htmlName = `<span class="badge-sub">[${r.semokCode}] ${name}</span>`;
+      cleanName = `[${r.semokCode}] ${name}`;
     } else if (currentMode === 'item') {
       key = r.businessItem;
       sortName = r.businessItem;
       htmlName = `<span class="badge-sub">${r.businessItem}</span>`;
+      cleanName = r.businessItem;
     } else if (currentMode === 'item_bimok') {
       const name = bimokMap[r.bimokCode] || "기타";
       key = `${r.businessItem} > [${r.bimokCode}] ${name}`;
       sortName = `${r.businessItem}__${r.bimokCode}`;
       htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.bimokCode}] ${name}</span>`;
+      cleanName = `${r.businessItem} > [${r.bimokCode}] ${name}`;
     } else if (currentMode === 'item_semok') {
       const name = semokMap[r.semokCode] || (r.cRaw.replace(/\[\d+\]/, '').trim() || "기타");
       key = `${r.businessItem} > [${r.semokCode}] ${name}`;
       sortName = `${r.businessItem}__${r.semokCode}`;
       htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.semokCode}] ${name}</span>`;
+      cleanName = `${r.businessItem} > [${r.semokCode}] ${name}`;
     }
 
     if (!grouped[key]) {
@@ -558,6 +565,7 @@ function renderTable() {
         name: key,
         sortName: sortName,
         htmlName: htmlName,
+        cleanName: cleanName,
         budget: 0, actL: 0, expM: 0, distP: 0, grantQ: 0, actR: 0, expS: 0, exec: 0
       };
     }
@@ -657,21 +665,342 @@ function renderTable() {
   document.getElementById('sumExec').textContent = tExec.toLocaleString() + '원';
   document.getElementById('sumRate').textContent = totalRate + '%';
   document.getElementById('sumRemain').textContent = totalRemain.toLocaleString() + '원';
+
+  // 엑셀 내보내기용 최신 데이터 캐싱
+  let modeName = "1-1_비목별";
+  if (currentMode === 'semok') modeName = '1-2_세목별';
+  else if (currentMode === 'item') modeName = '2_사업항목별';
+  else if (currentMode === 'item_bimok') modeName = '2-1_사업항목내비목별';
+  else if (currentMode === 'item_semok') modeName = '2-2_사업항목내세목별';
+
+  const scopeText = scope === 'all' ? '전체통합' : scope.replace(/\.[^/.]+$/, "");
+
+  currentExportPayload = {
+    items: items,
+    totals: {
+      budget: tBudget, actL: tActL, expM: tExpM, distP: tDistP,
+      grantQ: tGrantQ, actR: tActR, expS: tExpS, exec: tExec,
+      rate: parseFloat(totalRate), remain: totalRemain
+    },
+    modeName: modeName,
+    scopeText: scopeText
+  };
 }
 
+/* 고품질 엑셀(#,##0 서식 및 HWP 공문서 스타일) 전용 생성기 */
 function exportToExcel() {
-  const table = document.getElementById('resultTable');
-  const wb = XLSX.utils.table_to_book(table, { sheet: "예산집행정리" });
-  let modeText = "";
-  if (currentMode === 'bimok') modeText = '1-1_비목별';
-  else if (currentMode === 'semok') modeText = '1-2_세목별';
-  else if (currentMode === 'item') modeText = '2_사업항목별';
-  else if (currentMode === 'item_bimok') modeText = '2-1_사업항목내비목별';
-  else if (currentMode === 'item_semok') modeText = '2-2_사업항목내세목별';
+  if (!currentExportPayload || !currentExportPayload.items || currentExportPayload.items.length === 0) {
+    alert("내보낼 집계 데이터가 없습니다. 먼저 엑셀 파일을 업로드해 주세요.");
+    return;
+  }
 
-  const scope = document.getElementById('scopeSelect').value;
-  const scopeText = scope === 'all' ? '통합' : scope.replace(/\.[^/.]+$/, "");
-  XLSX.writeFile(wb, `창의융합교육원_예산정리_${scopeText}_${modeText}_20260903.xlsx`);
+  const wb = XLSX.utils.book_new();
+  const ws = {};
+
+  // 테두리 스타일 정의
+  const borderThin = {
+    top: { style: "thin", color: { rgb: "D3D8DF" } },
+    bottom: { style: "thin", color: { rgb: "D3D8DF" } },
+    left: { style: "thin", color: { rgb: "D3D8DF" } },
+    right: { style: "thin", color: { rgb: "D3D8DF" } }
+  };
+  const borderHeader = {
+    top: { style: "thin", color: { rgb: "B8BFC7" } },
+    bottom: { style: "thin", color: { rgb: "B8BFC7" } },
+    left: { style: "thin", color: { rgb: "B8BFC7" } },
+    right: { style: "thin", color: { rgb: "B8BFC7" } }
+  };
+
+  // 1. 최상단 대제목 (Row 0)
+  ws[XLSX.utils.encode_cell({ c: 0, r: 0 })] = {
+    v: "부산광역시교육청창의융합교육원 예산 집행 현황",
+    t: 's',
+    s: {
+      font: { name: "맑은 고딕", sz: 16, bold: true, color: { rgb: "1E3A8A" } },
+      alignment: { horizontal: "center", vertical: "center" }
+    }
+  };
+
+  // 2. 부제목 및 메타정보 (Row 1)
+  const now = new Date();
+  const dateStr = now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, '0') + "-" +
+    String(now.getDate()).padStart(2, '0') + " " +
+    String(now.getHours()).padStart(2, '0') + ":" +
+    String(now.getMinutes()).padStart(2, '0');
+  
+  const metaText = `■ 정리기준: ${currentExportPayload.modeName}    |    ■ 집계대상: ${currentExportPayload.scopeText}    |    ■ 출력일시: ${dateStr}`;
+  ws[XLSX.utils.encode_cell({ c: 0, r: 1 })] = {
+    v: metaText,
+    t: 's',
+    s: {
+      font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "555555" } },
+      alignment: { horizontal: "right", vertical: "center" }
+    }
+  };
+
+  // 3. 테이블 2단 헤더 생성 (Row 3, 4)
+  for (let c = 0; c <= 10; c++) {
+    let bg = "F4F6F9";
+    let color = "2B3036";
+    let text = "";
+    if (c === 0) text = "구 분";
+    else if (c >= 1 && c <= 3) { text = "단위과제카드"; bg = "EDF2F7"; }
+    else if (c >= 4 && c <= 7) { text = "일상경비교부액"; bg = "F7FAFC"; }
+    else if (c >= 8 && c <= 10) { text = "최종 집행 현황"; bg = "E6F4EA"; color = "02692E"; }
+
+    ws[XLSX.utils.encode_cell({ c: c, r: 3 })] = {
+      v: text,
+      t: 's',
+      s: {
+        font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: color } },
+        fill: { fgColor: { rgb: bg } },
+        alignment: { horizontal: "center", vertical: "center" },
+        border: borderHeader
+      }
+    };
+  }
+
+  const h2_cols = [
+    { c: 0, title: "구 분", bg: "F4F6F9", color: "2B3036" },
+    { c: 1, title: "예산현액 [I]", bg: "EDF2F7", color: "2B3036" },
+    { c: 2, title: "원인행위액 [L]", bg: "EDF2F7", color: "2B3036" },
+    { c: 3, title: "지출액 [M]", bg: "EDF2F7", color: "2B3036" },
+    { c: 4, title: "배부액 [P]", bg: "F7FAFC", color: "2B3036" },
+    { c: 5, title: "교부액 [Q]", bg: "F7FAFC", color: "2B3036" },
+    { c: 6, title: "원인행위액 [R]", bg: "F7FAFC", color: "2B3036" },
+    { c: 7, title: "지출액 [S]", bg: "F7FAFC", color: "2B3036" },
+    { c: 8, title: "실집행금액 [M-Q+S]", bg: "E6F4EA", color: "02692E" },
+    { c: 9, title: "집행률", bg: "E6F4EA", color: "02692E" },
+    { c: 10, title: "예산잔액", bg: "E6F4EA", color: "02692E" }
+  ];
+
+  h2_cols.forEach(col => {
+    ws[XLSX.utils.encode_cell({ c: col.c, r: 4 })] = {
+      v: col.title,
+      t: 's',
+      s: {
+        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: col.color } },
+        fill: { fgColor: { rgb: col.bg } },
+        alignment: { horizontal: "center", vertical: "center", wrapText: true },
+        border: borderHeader
+      }
+    };
+  });
+
+  const merges = [
+    { s: { c: 0, r: 0 }, e: { c: 10, r: 0 } }, // 대제목 행 병합
+    { s: { c: 0, r: 1 }, e: { c: 10, r: 1 } }, // 메타정보 행 병합
+    { s: { c: 0, r: 3 }, e: { c: 0, r: 4 } },  // 구분 상하 병합
+    { s: { c: 1, r: 3 }, e: { c: 3, r: 3 } },  // 단위과제카드 좌우 병합
+    { s: { c: 4, r: 3 }, e: { c: 7, r: 3 } },  // 일상경비교부액 좌우 병합
+    { s: { c: 8, r: 3 }, e: { c: 10, r: 3 } }  // 최종 집행 현황 좌우 병합
+  ];
+
+  // 4. 데이터 행 생성 (Row 5부터 시작)
+  let currentRow = 5;
+  currentExportPayload.items.forEach((item, idx) => {
+    const isEven = idx % 2 === 1;
+    const bg = isEven ? "FAFBFC" : "FFFFFF";
+    const highlightBg = isEven ? "F0FBF4" : "F6FCF8";
+
+    // Col 0: 구분 (순수 텍스트)
+    ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
+      v: item.cleanName,
+      t: 's',
+      s: {
+        font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "111111" } },
+        fill: { fgColor: { rgb: bg } },
+        alignment: { horizontal: "left", vertical: "center" },
+        border: borderThin
+      }
+    };
+
+    // Cols 1~7: 순수 숫자형 및 "#,##0" 서식 적용
+    const numFields = [item.budget, item.actL, item.expM, item.distP, item.grantQ, item.actR, item.expS];
+    numFields.forEach((val, fIdx) => {
+      ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
+        v: val,
+        t: 'n',
+        z: '#,##0',
+        s: {
+          font: { name: "맑은 고딕", sz: 9.5, color: { rgb: (fIdx === 1 || fIdx === 3 || fIdx === 5) ? "666666" : "111111" } },
+          fill: { fgColor: { rgb: bg } },
+          alignment: { horizontal: "right", vertical: "center" },
+          border: borderThin
+        }
+      };
+    });
+
+    // Col 8: 실집행금액 [M-Q+S]
+    ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
+      v: item.exec,
+      t: 'n',
+      z: '#,##0',
+      s: {
+        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "02692E" } },
+        fill: { fgColor: { rgb: highlightBg } },
+        alignment: { horizontal: "right", vertical: "center" },
+        border: borderThin
+      }
+    };
+
+    // Col 9: 집행률 (엑셀 백분율 숫자형: 0.0%)
+    const rateDecimal = item.budget > 0 ? (item.exec / item.budget) : 0;
+    ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
+      v: rateDecimal,
+      t: 'n',
+      z: '0.0%',
+      s: {
+        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: item.rate >= 80 ? "029F45" : "D97706" } },
+        fill: { fgColor: { rgb: highlightBg } },
+        alignment: { horizontal: "right", vertical: "center" },
+        border: borderThin
+      }
+    };
+
+    // Col 10: 예산잔액
+    ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
+      v: item.remain,
+      t: 'n',
+      z: '#,##0',
+      s: {
+        font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "111111" } },
+        fill: { fgColor: { rgb: highlightBg } },
+        alignment: { horizontal: "right", vertical: "center" },
+        border: borderThin
+      }
+    };
+
+    currentRow++;
+  });
+
+  // 5. 회계 표준 복선 테두리 합계 행
+  const tot = currentExportPayload.totals;
+  const borderTotal = {
+    top: { style: "thin", color: { rgb: "03C75A" } },
+    bottom: { style: "double", color: { rgb: "03C75A" } },
+    left: { style: "thin", color: { rgb: "B8BFC7" } },
+    right: { style: "thin", color: { rgb: "B8BFC7" } }
+  };
+  const totBg = "EEF9F2";
+
+  // Col 0: 합계 라벨
+  ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
+    v: "합 계",
+    t: 's',
+    s: {
+      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "111111" } },
+      fill: { fgColor: { rgb: totBg } },
+      alignment: { horizontal: "center", vertical: "center" },
+      border: borderTotal
+    }
+  };
+
+  // Cols 1~7: 각 항목 합계
+  const totNums = [tot.budget, tot.actL, tot.expM, tot.distP, tot.grantQ, tot.actR, tot.expS];
+  totNums.forEach((val, fIdx) => {
+    ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
+      v: val,
+      t: 'n',
+      z: '#,##0',
+      s: {
+        font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "111111" } },
+        fill: { fgColor: { rgb: totBg } },
+        alignment: { horizontal: "right", vertical: "center" },
+        border: borderTotal
+      }
+    };
+  });
+
+  // Col 8: 실집행금액 합계
+  ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
+    v: tot.exec,
+    t: 'n',
+    z: '#,##0',
+    s: {
+      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "02692E" } },
+      fill: { fgColor: { rgb: totBg } },
+      alignment: { horizontal: "right", vertical: "center" },
+      border: borderTotal
+    }
+  };
+
+  // Col 9: 전체 집행률 합계
+  const totalRateDec = tot.budget > 0 ? (tot.exec / tot.budget) : 0;
+  ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
+    v: totalRateDec,
+    t: 'n',
+    z: '0.0%',
+    s: {
+      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "02692E" } },
+      fill: { fgColor: { rgb: totBg } },
+      alignment: { horizontal: "right", vertical: "center" },
+      border: borderTotal
+    }
+  };
+
+  // Col 10: 전체 예산잔액 합계
+  ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
+    v: tot.remain,
+    t: 'n',
+    z: '#,##0',
+    s: {
+      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "111111" } },
+      fill: { fgColor: { rgb: totBg } },
+      alignment: { horizontal: "right", vertical: "center" },
+      border: borderTotal
+    }
+  };
+
+  currentRow++;
+
+  // 6. 하단 각주 및 출처
+  currentRow++; // 빈 줄 구분
+  ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
+    v: "* 실집행금액 = 단위과제 지출액[M] - 일상경비 교부액[Q] + 일상경비 지출액[S]",
+    t: 's',
+    s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "777777" } } }
+  };
+  currentRow++;
+  ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
+    v: "* 작성기준: 부산광역시교육청창의융합교육원 예산 정리 프로그램 (20260903 1230버전)",
+    t: 's',
+    s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "777777" } } }
+  };
+
+  // 엑셀 워크시트 속성(열 너비, 행 높이, 영역) 바인딩
+  ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: 10, r: currentRow } });
+  ws['!merges'] = merges;
+  ws['!cols'] = [
+    { wch: 34 }, // Col A: 구분 (긴 사업항목/세목명 완벽 수용)
+    { wch: 17 }, // Col B: 예산현액
+    { wch: 16 }, // Col C: 단위원인행위액
+    { wch: 16 }, // Col D: 단위지출액
+    { wch: 16 }, // Col E: 일상배부액
+    { wch: 16 }, // Col F: 일상교부액
+    { wch: 16 }, // Col G: 일상원인행위액
+    { wch: 16 }, // Col H: 일상지출액
+    { wch: 19 }, // Col I: 실집행금액
+    { wch: 13 }, // Col J: 집행률
+    { wch: 17 }  // Col K: 예산잔액
+  ];
+  ws['!rows'] = [
+    { hpt: 32 }, // R0: 대제목
+    { hpt: 20 }, // R1: 메타정보
+    { hpt: 10 }, // R2: 빈 줄
+    { hpt: 22 }, // R3: 헤더 1단
+    { hpt: 22 }, // R4: 헤더 2단
+  ];
+  for (let i = 5; i < currentRow - 3; i++) {
+    ws['!rows'].push({ hpt: 20 });
+  }
+  ws['!rows'].push({ hpt: 25 }); // 합계 행 높이
+
+  XLSX.utils.book_append_sheet(wb, ws, "예산집행정리");
+
+  const fileName = `창의융합교육원_예산정리_${currentExportPayload.scopeText}_${currentExportPayload.modeName}_20260903.xlsx`;
+  XLSX.writeFile(wb, fileName);
 }
 </script>
 </body>
