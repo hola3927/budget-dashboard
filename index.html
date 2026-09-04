@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>부산창의융합교육원 예산 정리 프로그램</title>
-<!-- 엑셀 스타일 및 숫자 서식 완벽 지원 라이브러리 -->
+<!-- 엑셀 스타일 및 숫자 서식 지원 라이브러리 -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
   :root {
@@ -12,6 +12,9 @@
     --naver-green-dark: #029f45;
     --naver-green-light: #f0fdf4;
     --naver-green-border: #bbf7d0;
+    --blue-accent: #2563eb;
+    --purple-accent: #7c3aed;
+    --orange-accent: #ea580c;
     --hwp-border-dark: #b8bfc7;
     --hwp-border: #d3d8df;
     --hwp-header-bg: #f4f6f9;
@@ -19,22 +22,17 @@
     --text-main: #1e2022;
     --text-sub: #636b73;
     --card-bg: #ffffff;
-    --blue-accent: #2563eb;
-    --blue-light: #eff6ff;
   }
   * { box-sizing: border-box; }
   
   body {
     font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, sans-serif;
     margin: 0; padding: 20px 24px 40px; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.5;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
   }
   .container { max-width: 1560px; margin: 0 auto; }
 
-  /* 상단 헤더 */
+  /* 헤더 */
   .header {
     background: var(--card-bg); padding: 20px 26px; border-radius: 8px;
     border: 1px solid var(--hwp-border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 16px;
@@ -69,7 +67,7 @@
   .guide-box strong { color: var(--naver-green-dark); }
   .guide-box ol { margin: 3px 0 0 18px; padding: 0; }
 
-  /* 드롭존 */
+  /* 파일 드롭존 */
   .drop-zone {
     border: 2px dashed #a7e3be; background: var(--card-bg); border-radius: 8px;
     padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; margin-bottom: 16px;
@@ -85,7 +83,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.03); margin-bottom: 16px;
   }
   .controls-row {
-    display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;
+    display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center;
   }
   .tab-group-wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   .tab-subgroup { display: flex; align-items: center; gap: 5px; }
@@ -98,19 +96,16 @@
   .btn-tab:hover { background-color: #f1f3f5; }
   .btn-tab.active { background: var(--naver-green); color: white; border-color: var(--naver-green); }
 
-  /* 기준 선택 토글 버튼 */
-  .base-toggle-wrap { display: flex; align-items: center; gap: 6px; }
+  /* 3종 집행 기준 선택 버튼 */
+  .base-toggle-wrap { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .btn-base {
-    border: 1px solid var(--hwp-border); background: white; padding: 6px 12px;
-    border-radius: 5px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: 0.15s; color: #444;
+    border: 1px solid var(--hwp-border); background: white; padding: 6px 11px;
+    border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s; color: #444;
   }
   .btn-base:hover { background-color: #f8fafc; }
-  .btn-base.active-real {
-    background: var(--naver-green); color: white; border-color: var(--naver-green-dark);
-  }
-  .btn-base.active-act {
-    background: var(--blue-accent); color: white; border-color: #1d4ed8;
-  }
+  .btn-base.active-real { background: var(--naver-green); color: white; border-color: var(--naver-green-dark); }
+  .btn-base.active-act { background: var(--blue-accent); color: white; border-color: #1d4ed8; }
+  .btn-base.active-card-act { background: var(--purple-accent); color: white; border-color: #6d28d9; }
 
   select.custom-select {
     padding: 6px 10px; border-radius: 5px; border: 1px solid var(--hwp-border);
@@ -121,14 +116,14 @@
   .action-buttons { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .btn-hwp {
     background: #4b5563; color: white; border: 1px solid #374151;
-    padding: 6px 13px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
+    padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
     display: inline-flex; align-items: center; gap: 5px;
   }
   .btn-hwp:hover { background: #374151; }
   
   .btn-download {
     background: var(--naver-green); color: white; border: 1px solid var(--naver-green-dark);
-    padding: 6px 14px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
+    padding: 6px 13px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
     display: inline-flex; align-items: center; gap: 5px;
   }
   .btn-download:hover { background: var(--naver-green-dark); }
@@ -139,24 +134,71 @@
   }
   .btn-reset-pending:hover { background: #fff1f2; }
 
-  /* 요약 카드 */
-  .summary-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+  /* 상단 종합 요약 카드 */
+  .summary-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px; }
   .card {
-    background: var(--card-bg); padding: 14px 16px; border-radius: 8px; border: 1px solid var(--hwp-border);
+    background: var(--card-bg); padding: 13px 16px; border-radius: 8px; border: 1px solid var(--hwp-border);
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   }
-  .card .label { font-size: 11.5px; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
-  .card .value { font-size: 18px; font-weight: 700; color: #111; }
+  .card .label { font-size: 11.5px; color: var(--text-sub); margin-bottom: 3px; font-weight: 600; }
+  .card .value { font-size: 17.5px; font-weight: 700; color: #111; }
   .card .point-green { color: var(--naver-green-dark); }
   .card .point-blue { color: var(--blue-accent); }
+  .card .point-purple { color: var(--purple-accent); }
   .card .point-orange { color: #d97706; }
+
+  /* 세출분야별(신속·소비·투자) 통계 보드 */
+  .sector-board {
+    background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border);
+    padding: 15px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .sector-board-header {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--hwp-border);
+  }
+  .sector-board-title { font-size: 13.5px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 6px; }
+  .sector-board-sub { font-size: 11.5px; color: var(--text-sub); }
+
+  .sector-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .sector-card {
+    border-radius: 7px; padding: 12px 14px; border: 1px solid var(--hwp-border);
+    display: flex; flex-direction: column; gap: 8px; position: relative;
+  }
+  .sector-card.quick { background: #fffaf5; border-top: 3.5px solid var(--orange-accent); }
+  .sector-card.consume { background: #f8faff; border-top: 3.5px solid var(--blue-accent); }
+  .sector-card.invest { background: #faf5ff; border-top: 3.5px solid var(--purple-accent); }
+
+  .sector-card-head { display: flex; justify-content: space-between; align-items: center; }
+  .sector-badge-title {
+    font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .badge-title-quick { background: #ffedd5; color: #c2410c; }
+  .badge-title-consume { background: #dbeafe; color: #1e40af; }
+  .badge-title-invest { background: #f3e8ff; color: #6b21a8; }
+  .sector-target-count { font-size: 11px; color: var(--text-sub); font-weight: 600; }
+
+  .sector-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; }
+  .sector-row .s-name { color: #555; }
+  .sector-row .s-num { font-weight: 700; color: #222; }
+
+  .sector-progress-wrap { margin-top: 2px; }
+  .sector-progress-bar {
+    width: 100%; height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 4px;
+  }
+  .sector-progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .fill-quick { background: linear-gradient(90deg, #fdba74, #ea580c); }
+  .fill-consume { background: linear-gradient(90deg, #93c5fd, #2563eb); }
+  .fill-invest { background: linear-gradient(90deg, #d8b4fe, #7c3aed); }
+  .sector-rate-box {
+    display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;
+  }
 
   /* 테이블 영역 */
   .table-container {
     background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border-dark);
     box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;
   }
-  table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; min-width: 1280px; }
+  table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; min-width: 1300px; }
   th, td { padding: 6px 8px; border: 1px solid var(--hwp-border); white-space: nowrap; }
   th { background: var(--hwp-header-bg); font-weight: 700; color: #2b3036; text-align: center; }
   th.group-header { border-bottom: 1px solid var(--hwp-border-dark); font-size: 11.5px; }
@@ -173,13 +215,22 @@
     background: #eef9f2 !important; font-weight: 700;
     border-top: 2px solid var(--naver-green) !important; border-bottom: 2px solid var(--naver-green) !important;
   }
-  .highlight-cell { font-weight: 700; color: #027a35; background-color: #f6fcf8; }
+  .highlight-cell { font-weight: 700; }
 
-  /* 지출예정액 입력 인풋 */
+  /* 세목별 분야 구분 뱃지 */
+  .badge-tag {
+    display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 5px;
+    border-radius: 3px; margin-left: 3px; vertical-align: middle; line-height: 1.3;
+  }
+  .tag-quick { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+  .tag-consume { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+  .tag-invest { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+
+  /* 지출예정액 인풋 */
   .input-pending {
     width: 105px; padding: 4px 6px; font-size: 12px; text-align: right;
     border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: #1e293b;
-    outline: none; transition: 0.15s; -webkit-user-select: text; user-select: text;
+    outline: none; transition: 0.15s; user-select: text;
   }
   .input-pending:focus {
     border-color: var(--naver-green); box-shadow: 0 0 0 2px rgba(3, 199, 90, 0.2); background-color: #fff;
@@ -205,13 +256,13 @@
       <div class="title-area">
         <div class="logo-icon">창</div>
         <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
-        <span class="version-badge">20260903 최종판</span>
+        <span class="version-badge">20260904 개정판</span>
       </div>
       <a href="mailto:hola3927@korea.kr" class="feedback-btn" title="오류 제보 및 기능 제안">
         ✉ 피드백 및 문의: <strong>hola3927@korea.kr</strong>
       </a>
     </div>
-    <p class="subtitle">K-에듀파인 예산현액 엑셀 파일을 일괄 분석하여 실집행/원인행위 기준 분류 및 지출대기액 시뮬레이션을 제공합니다.</p>
+    <p class="subtitle">K-에듀파인 예산현액 엑셀 파일을 일괄 분석하여 실집행/원인행위/단위원인 기준 분류 및 신속·소비·투자 분야별 통계와 지출대기액 시뮬레이션을 제공합니다.</p>
     
     <div class="guide-box">
       <strong>K-에듀파인 엑셀 파일 다운로드 방법 안내</strong>
@@ -232,15 +283,18 @@
   </div>
 
   <div class="controls" id="controls" style="display:none;">
-    <!-- 1행: 집행 기준 선택 및 정렬/필터 -->
+    <!-- 1행: 3종 집행 산출 기준 토글 및 액션 버튼 -->
     <div class="controls-row">
       <div class="base-toggle-wrap">
         <span class="subgroup-label">📊 집행 산출 기준</span>
-        <button class="btn-base active-real" id="btnBaseReal" onclick="setExecBase('real')">
-          🟢 실집행금액 기준 [지출액 M - 교부액 Q + 지출액 S]
+        <button class="btn-base active-real" id="btnBaseReal" onclick="setExecBase('real')" title="1번: 실집행금액 (출금액 기준)">
+          🟢 실집행 기준 [M - Q + S]
         </button>
-        <button class="btn-base" id="btnBaseAct" onclick="setExecBase('act')">
-          🔵 원인행위액 기준 [원인행위 L - 배부액 P + 원인행위 R]
+        <button class="btn-base" id="btnBaseAct" onclick="setExecBase('act')" title="2번: 원인행위액 (지출 및 일상경비 원인행위 결재액)">
+          🔵 지출/일상경비 원인행위 기준 [L - P + R]
+        </button>
+        <button class="btn-base" id="btnBaseCardAct" onclick="setExecBase('cardAct')" title="3번: 단위과제카드 원인행위액 (지출 원인행위 및 일상경비 배부액)">
+          🟣 지출 원인행위(배부액) 기준 [L]
         </button>
       </div>
 
@@ -251,7 +305,7 @@
       </div>
     </div>
 
-    <!-- 2행: 분류 모드 탭 및 정렬 기준 -->
+    <!-- 2행: 분류 모드 탭, 분야 필터, 정렬 기준 -->
     <div class="controls-row">
       <div class="tab-group-wrap">
         <div class="tab-subgroup">
@@ -268,7 +322,15 @@
       </div>
 
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <span style="font-size: 12px; font-weight: bold; color: #444;">정렬:</span>
+        <span style="font-size: 12px; font-weight: bold; color: #444;">분야 필터:</span>
+        <select id="sectorFilterSelect" class="custom-select" onchange="onSectorFilterChange()">
+          <option value="all">전체 비목/세목 표시</option>
+          <option value="quick">⚡ 신속집행 대상 세목만</option>
+          <option value="consume">🛒 소비분야 대상 세목만</option>
+          <option value="invest">🏗️ 투자분야 대상 세목만</option>
+        </select>
+
+        <span style="font-size: 12px; font-weight: bold; color: #444; margin-left:4px;">정렬:</span>
         <select id="sortSelect" class="custom-select" onchange="onSortSelectChange()">
           <option value="name_asc">구분 순 (기본값 / 가나다·코드순)</option>
           <option value="budget_desc">예산현액 많은 순</option>
@@ -287,7 +349,7 @@
     </div>
   </div>
 
-  <!-- 요약 카드 (지출대기액 및 최종 잔액 실시간 반영) -->
+  <!-- 상단 요약 카드 -->
   <div class="summary-cards" id="summaryCards" style="display:none;">
     <div class="card"><div class="label">총 예산현액 [I]</div><div class="value" id="sumBudget">0원</div></div>
     <div class="card"><div class="label" id="cardLabelExec">실집행금액 (M - Q + S)</div><div class="value point-green" id="sumExec">0원</div></div>
@@ -296,12 +358,125 @@
     <div class="card"><div class="label">최종 예산잔액 (대기반영)</div><div class="value" id="sumRemain">0원</div></div>
   </div>
 
+  <!-- 세출분야별(신속·소비·투자) 실시간 통계 보드 -->
+  <div class="sector-board" id="sectorBoard" style="display:none;">
+    <div class="sector-board-header">
+      <div>
+        <div class="sector-board-title">
+          <span>🎯 세출분야별 집행 통계 (신속 · 소비 · 투자)</span>
+        </div>
+        <div class="sector-board-sub">* 선택된 집행 산출 기준 및 입력된 지출대기액(예정액)이 실시간 자동 반영됩니다.</div>
+      </div>
+    </div>
+    
+    <div class="sector-cards-grid">
+      <!-- 1. 신속집행 분야 카드 -->
+      <div class="sector-card quick">
+        <div class="sector-card-head">
+          <span class="sector-badge-title badge-title-quick">⚡ 신속집행 분야</span>
+          <span class="sector-target-count">지침 43개 세목</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">예산현액</span>
+          <span class="s-num" id="quickBudget">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name" id="quickExecTitle">집행금액</span>
+          <span class="s-num" style="color: #c2410c;" id="quickExec">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">지출대기액</span>
+          <span class="s-num" style="color: #d97706;" id="quickPending">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">예산잔액</span>
+          <span class="s-num" id="quickRemain">0원</span>
+        </div>
+        <div class="sector-progress-wrap">
+          <div class="sector-progress-bar">
+            <div class="sector-progress-fill fill-quick" id="quickProgressFill" style="width: 0%;"></div>
+          </div>
+          <div class="sector-rate-box">
+            <span style="color:#c2410c;">최종 집행률</span>
+            <span style="color:#c2410c;" id="quickRate">0.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 소비 분야 카드 -->
+      <div class="sector-card consume">
+        <div class="sector-card-head">
+          <span class="sector-badge-title badge-title-consume">🛒 소비 분야</span>
+          <span class="sector-target-count">지침 35개 세목</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">예산현액</span>
+          <span class="s-num" id="consumeBudget">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name" id="consumeExecTitle">집행금액</span>
+          <span class="s-num" style="color: #1e40af;" id="consumeExec">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">지출대기액</span>
+          <span class="s-num" style="color: #d97706;" id="consumePending">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">예산잔액</span>
+          <span class="s-num" id="consumeRemain">0원</span>
+        </div>
+        <div class="sector-progress-wrap">
+          <div class="sector-progress-bar">
+            <div class="sector-progress-fill fill-consume" id="consumeProgressFill" style="width: 0%;"></div>
+          </div>
+          <div class="sector-rate-box">
+            <span style="color:#1e40af;">최종 집행률</span>
+            <span style="color:#1e40af;" id="consumeRate">0.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 투자 분야 카드 -->
+      <div class="sector-card invest">
+        <div class="sector-card-head">
+          <span class="sector-badge-title badge-title-invest">🏗️ 투자 분야</span>
+          <span class="sector-target-count">지침 7개 세목</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">예산현액</span>
+          <span class="s-num" id="investBudget">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name" id="investExecTitle">집행금액</span>
+          <span class="s-num" style="color: #6b21a8;" id="investExec">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">지출대기액</span>
+          <span class="s-num" style="color: #d97706;" id="investPending">0원</span>
+        </div>
+        <div class="sector-row">
+          <span class="s-name">예산잔액</span>
+          <span class="s-num" id="investRemain">0원</span>
+        </div>
+        <div class="sector-progress-wrap">
+          <div class="sector-progress-bar">
+            <div class="sector-progress-fill fill-invest" id="investProgressFill" style="width: 0%;"></div>
+          </div>
+          <div class="sector-rate-box">
+            <span style="color:#6b21a8;">최종 집행률</span>
+            <span style="color:#6b21a8;" id="investRate">0.0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 결과 테이블 -->
   <div class="table-container" id="tableWrap" style="display:none;">
     <table id="resultTable">
       <thead>
         <tr>
-          <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align:middle; width:260px;">
+          <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align:middle; width:280px;">
             구 분 <span class="sort-icon" id="icon_name"></span>
           </th>
           <th colspan="3" class="group-header" style="background:#f0f2f5;">단위과제카드</th>
@@ -345,20 +520,20 @@
       본 프로그램의 소스코드 및 산출 로직은 저작권법의 보호를 받으며, 무단 복제·도용 및 배포 시 법적 조치가 취해질 수 있습니다.
     </p>
     <p style="margin: 0; color: #888;">
-      프로그램 버전: 20260903 최종판 | 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: var(--naver-green-dark); font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
+      프로그램 버전: 20260904 개정판 | 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: var(--naver-green-dark); font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
     </p>
   </div>
 </div>
 
 <script>
-/* 보안 및 단축키 제어 (인풋창 내에서는 타이핑/단축키 허용) */
+/* 보안 및 인풋 내 단축키 허용 제어 */
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'INPUT') return;
   e.preventDefault();
 });
 
 document.addEventListener('keydown', function(e) {
-  if (e.target.tagName === 'INPUT') return; // 인풋창 편집 시 차단 안 함
+  if (e.target.tagName === 'INPUT') return;
   if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
   if (e.ctrlKey) {
     if (['u', 's', 'c'].includes(e.key.toLowerCase())) {
@@ -368,6 +543,7 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+/* 원가통계비목 및 세목 마스터 매핑 테이블 */
 const bimokMap = {
   "110": "인건비", "210": "운영비", "220": "여비", "230": "업무추진비", "240": "복리후생비", "250": "직무수행경비",
   "260": "연구개발비", "280": "경상교육지원사업비", "310": "보전금", "320": "민간이전", "330": "자치단체등이전",
@@ -405,18 +581,56 @@ const semokMap = {
   "820-01": "기금전출금", "830-01": "예탁금", "840-01": "예수금원금 상환", "840-02": "예수금이자 상환"
 };
 
+/* 세출분야별 세목 코드 정의 (5자리 연속숫자) */
+// 1) 신속집행 (43개)
+const sectorQuickCodes = new Set([
+  "21001", "21003", "21007", "21008", "21009", "21010", "21011", "21012", "21015", "24002",
+  "32001", "32002", "32008", "32009", "33001", "33002", "33003", "33004", "33005", "33006",
+  "33009", "33010", "35001", "41001", "43001", "44001", "61001", "61002", "61003", "62002",
+  "62003", "62004", "62007", "62009", "62010", "62011", "62014", "62015",
+  "42001", "42002", "42003", "42004", "42005"
+]);
+
+// 2) 소비분야 (35개)
+const sectorConsumeCodes = new Set([
+  "21001", "21003", "21007", "21008", "21009", "21010", "21011", "21012", "21015", "24002",
+  "11001", "11003", "11004", "11005",
+  "21002", "21004", "21005", "21006", "21013", "21014",
+  "22001", "22002", "22003", "22004", "22005",
+  "23001", "23002", "23003",
+  "24001", "24003", "24004",
+  "25002", "25003", "25004",
+  "26001"
+]);
+
+// 3) 투자분야 (7개)
+const sectorInvestCodes = new Set([
+  "42001", "42002", "42003", "42004", "42005", "43001", "44001"
+]);
+
+function getSectorsBy5Code(code5) {
+  const list = [];
+  if (sectorQuickCodes.has(code5)) list.push('신속');
+  if (sectorConsumeCodes.has(code5)) list.push('소비');
+  if (sectorInvestCodes.has(code5)) list.push('투자');
+  return list;
+}
+
 let loadedFilesData = [];
 let currentMode = 'bimok';
 let currentSortKey = 'name';
 let currentSortOrder = 'asc';
 
-// 집행 기준 상태: 'real' (실집행 M-Q+S) vs 'act' (원인행위 L-P+R)
+// 집행 산출 기준 상태: 'real' (실집행), 'act' (원인행위 L-P+R), 'cardAct' (단위과제카드 원인행위 L)
 let execBase = 'real';
+
+// 세출분야 필터: 'all', 'quick', 'consume', 'invest'
+let currentSectorFilter = 'all';
 
 // 지출대기액(예정액) 저장소: { [cleanName]: number }
 let pendingAmountMap = {};
 
-// 내보내기/클립보드용 글로벌 데이터 캐시
+// 엑셀/클립보드 내보내기용 글로벌 캐시
 let currentExportPayload = null;
 
 const fileInput = document.getElementById('fileInput');
@@ -465,6 +679,7 @@ function handleFiles(files) {
         document.getElementById('fileListText').innerHTML = `<strong style="color:#029f45;">총 ${files.length}개 파일 로드 완료</strong>`;
         document.getElementById('controls').style.display = 'flex';
         document.getElementById('summaryCards').style.display = 'grid';
+        document.getElementById('sectorBoard').style.display = 'block';
         document.getElementById('tableWrap').style.display = 'block';
         resetSortToDefault();
         renderTable();
@@ -501,6 +716,7 @@ function parseEdufineSheet(sheetData, fileName) {
       const bimokCode = codeMatch[1];
       const semokSuffix = codeMatch[2] || "00";
       const semokCode = `${bimokCode}-${semokSuffix}`;
+      const code5 = `${bimokCode}${semokSuffix}`;
 
       const num = (idx) => {
         const val = String(row[idx] || '').replace(/,/g, '').trim();
@@ -520,6 +736,10 @@ function parseEdufineSheet(sheetData, fileName) {
       const realExec = expM - grantQ + expS;
       // 2. 원인행위액 기준: 단위과제 원인행위액 [L] - 배부액 [P] + 원인행위액 [R]
       const actExec = actL - distP + actR;
+      // 3. 단위과제카드 원인행위액 기준: 원인행위액 [L]
+      const cardActExec = actL;
+
+      const sectors = getSectorsBy5Code(code5);
 
       rows.push({
         fileName: fileName,
@@ -527,6 +747,8 @@ function parseEdufineSheet(sheetData, fileName) {
         cRaw: cCol,
         bimokCode: bimokCode,
         semokCode: semokCode,
+        code5: code5,
+        sectors: sectors,
         budget: budget,
         actL: actL,
         expM: expM,
@@ -535,34 +757,56 @@ function parseEdufineSheet(sheetData, fileName) {
         actR: actR,
         expS: expS,
         realExec: realExec,
-        actExec: actExec
+        actExec: actExec,
+        cardActExec: cardActExec
       });
     }
   }
   return { cardName: currentCardName, rows: rows };
 }
 
-/* 집행 기준 전환 함수 (실집행 vs 원인행위) */
+/* 3종 집행 산출 기준 전환 함수 */
 function setExecBase(base) {
   execBase = base;
   const btnReal = document.getElementById('btnBaseReal');
   const btnAct = document.getElementById('btnBaseAct');
+  const btnCardAct = document.getElementById('btnBaseCardAct');
   const thGroupFinal = document.getElementById('thGroupFinal');
   const thColExec = document.getElementById('thColExec');
   const cardLabelExec = document.getElementById('cardLabelExec');
+  
+  const quickExecTitle = document.getElementById('quickExecTitle');
+  const consumeExecTitle = document.getElementById('consumeExecTitle');
+  const investExecTitle = document.getElementById('investExecTitle');
+
+  btnReal.className = 'btn-base';
+  btnAct.className = 'btn-base';
+  btnCardAct.className = 'btn-base';
 
   if (base === 'real') {
     btnReal.className = 'btn-base active-real';
-    btnAct.className = 'btn-base';
     thGroupFinal.textContent = '최종 집행 현황 (실집행금액 기준)';
     thColExec.innerHTML = `실집행금액 [M-Q+S] <span class="sort-icon" id="icon_exec"></span>`;
     cardLabelExec.textContent = '실집행금액 (M - Q + S)';
-  } else {
-    btnReal.className = 'btn-base';
+    quickExecTitle.textContent = '실집행액';
+    consumeExecTitle.textContent = '실집행액';
+    investExecTitle.textContent = '실집행액';
+  } else if (base === 'act') {
     btnAct.className = 'btn-base active-act';
     thGroupFinal.textContent = '최종 집행 현황 (원인행위액 기준)';
     thColExec.innerHTML = `집행금액(원인행위) [L-P+R] <span class="sort-icon" id="icon_exec"></span>`;
-    cardLabelExec.textContent = '집행금액 (원인행위: L - P + R)';
+    cardLabelExec.textContent = '원인행위액 (L - P + R)';
+    quickExecTitle.textContent = '원인행위액';
+    consumeExecTitle.textContent = '원인행위액';
+    investExecTitle.textContent = '원인행위액';
+  } else if (base === 'cardAct') {
+    btnCardAct.className = 'btn-base active-card-act';
+    thGroupFinal.textContent = '최종 집행 현황 (단위과제카드 원인행위액[L] 기준)';
+    thColExec.innerHTML = `단위원인행위액 [L] <span class="sort-icon" id="icon_exec"></span>`;
+    cardLabelExec.textContent = '단위과제 원인행위액 [L]';
+    quickExecTitle.textContent = '단위원인액';
+    consumeExecTitle.textContent = '단위원인액';
+    investExecTitle.textContent = '단위원인액';
   }
 
   renderTable();
@@ -608,14 +852,17 @@ function onSortSelectChange() {
   renderTable();
 }
 
-/* 지출대기액 입력 시 호출 */
+function onSectorFilterChange() {
+  currentSectorFilter = document.getElementById('sectorFilterSelect').value;
+  renderTable();
+}
+
 function onPendingInputChange(key, valStr) {
   const numVal = parseFloat(valStr.replace(/,/g, '')) || 0;
   pendingAmountMap[key] = numVal;
-  renderTable(true); // 입력 포커스 유지 렌더링
+  renderTable(true);
 }
 
-/* 지출대기액 전체 초기화 */
 function resetAllPending() {
   if (confirm("모든 지출대기액(예정액) 입력을 0원으로 초기화하시겠습니까?")) {
     pendingAmountMap = {};
@@ -634,12 +881,46 @@ function renderTable(keepFocus = false) {
     if (file) targetRows = file.rows;
   }
 
+  /* 1. 세출분야별(신속·소비·투자) 통계 산출 */
+  const sectorStats = {
+    quick:   { budget: 0, exec: 0, pending: 0, codes: sectorQuickCodes },
+    consume: { budget: 0, exec: 0, pending: 0, codes: sectorConsumeCodes },
+    invest:  { budget: 0, exec: 0, pending: 0, codes: sectorInvestCodes }
+  };
+
+  targetRows.forEach(r => {
+    let rowExec = (execBase === 'real') ? r.realExec : ((execBase === 'act') ? r.actExec : r.cardActExec);
+    if (sectorStats.quick.codes.has(r.code5)) {
+      sectorStats.quick.budget += r.budget;
+      sectorStats.quick.exec += rowExec;
+    }
+    if (sectorStats.consume.codes.has(r.code5)) {
+      sectorStats.consume.budget += r.budget;
+      sectorStats.consume.exec += rowExec;
+    }
+    if (sectorStats.invest.codes.has(r.code5)) {
+      sectorStats.invest.budget += r.budget;
+      sectorStats.invest.exec += rowExec;
+    }
+  });
+
+  /* 2. 테이블 그룹핑 집계 */
   const grouped = {};
   targetRows.forEach(r => {
     let key = "";
     let sortName = "";
     let htmlName = "";
     let cleanName = "";
+    let itemSectors = [];
+
+    // 분야 태그 HTML 생성 함수
+    const makeBadgeHtml = (sectors) => {
+      let h = "";
+      if (sectors.includes('신속')) h += `<span class="badge-tag tag-quick">신속</span>`;
+      if (sectors.includes('소비')) h += `<span class="badge-tag tag-consume">소비</span>`;
+      if (sectors.includes('투자')) h += `<span class="badge-tag tag-invest">투자</span>`;
+      return h;
+    };
 
     if (currentMode === 'bimok') {
       const name = bimokMap[r.bimokCode] || "기타";
@@ -647,29 +928,36 @@ function renderTable(keepFocus = false) {
       sortName = r.bimokCode;
       htmlName = `<span class="badge-sub">[${r.bimokCode}] ${name}</span>`;
       cleanName = `[${r.bimokCode}] ${name}`;
+      itemSectors = r.sectors;
     } else if (currentMode === 'semok') {
       const name = semokMap[r.semokCode] || (r.cRaw.replace(/\[\d+\]/, '').trim() || "기타");
+      const badges = makeBadgeHtml(r.sectors);
       key = `[${r.semokCode}] ${name}`;
       sortName = r.semokCode;
-      htmlName = `<span class="badge-sub">[${r.semokCode}] ${name}</span>`;
+      htmlName = `<span class="badge-sub">[${r.semokCode}] ${name}</span> ${badges}`;
       cleanName = `[${r.semokCode}] ${name}`;
+      itemSectors = r.sectors;
     } else if (currentMode === 'item') {
       key = r.businessItem;
       sortName = r.businessItem;
       htmlName = `<span class="badge-sub">${r.businessItem}</span>`;
       cleanName = r.businessItem;
+      itemSectors = r.sectors;
     } else if (currentMode === 'item_bimok') {
       const name = bimokMap[r.bimokCode] || "기타";
       key = `${r.businessItem} > [${r.bimokCode}] ${name}`;
       sortName = `${r.businessItem}__${r.bimokCode}`;
       htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.bimokCode}] ${name}</span>`;
       cleanName = `${r.businessItem} > [${r.bimokCode}] ${name}`;
+      itemSectors = r.sectors;
     } else if (currentMode === 'item_semok') {
       const name = semokMap[r.semokCode] || (r.cRaw.replace(/\[\d+\]/, '').trim() || "기타");
+      const badges = makeBadgeHtml(r.sectors);
       key = `${r.businessItem} > [${r.semokCode}] ${name}`;
       sortName = `${r.businessItem}__${r.semokCode}`;
-      htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.semokCode}] ${name}</span>`;
+      htmlName = `<span class="badge-item">${r.businessItem}</span> <span class="badge-sub">[${r.semokCode}] ${name}</span> ${badges}`;
       cleanName = `${r.businessItem} > [${r.semokCode}] ${name}`;
+      itemSectors = r.sectors;
     }
 
     if (!grouped[key]) {
@@ -678,33 +966,48 @@ function renderTable(keepFocus = false) {
         sortName: sortName,
         htmlName: htmlName,
         cleanName: cleanName,
+        sectors: new Set(),
         budget: 0, actL: 0, expM: 0, distP: 0, grantQ: 0, actR: 0, expS: 0,
-        realExec: 0, actExec: 0
+        realExec: 0, actExec: 0, cardActExec: 0
       };
     }
-    grouped[key].budget   += r.budget;
-    grouped[key].actL     += r.actL;
-    grouped[key].expM     += r.expM;
-    grouped[key].distP    += r.distP;
-    grouped[key].grantQ   += r.grantQ;
-    grouped[key].actR     += r.actR;
-    grouped[key].expS     += r.expS;
-    grouped[key].realExec += r.realExec;
-    grouped[key].actExec  += r.actExec;
+    itemSectors.forEach(s => grouped[key].sectors.add(s));
+    grouped[key].budget      += r.budget;
+    grouped[key].actL        += r.actL;
+    grouped[key].expM        += r.expM;
+    grouped[key].distP       += r.distP;
+    grouped[key].grantQ      += r.grantQ;
+    grouped[key].actR        += r.actR;
+    grouped[key].expS        += r.expS;
+    grouped[key].realExec    += r.realExec;
+    grouped[key].actExec     += r.actExec;
+    grouped[key].cardActExec += r.cardActExec;
   });
 
-  // 항목별 기준에 따른 집행액, 지출대기액 및 실시간 집행률/잔액 계산
-  const items = Object.values(grouped).map(item => {
-    const baseExec = (execBase === 'real') ? item.realExec : item.actExec;
+  // 집행액, 지출대기액 및 실시간 집행률 산출
+  let items = Object.values(grouped).map(item => {
+    let baseExec = 0;
+    if (execBase === 'real') baseExec = item.realExec;
+    else if (execBase === 'act') baseExec = item.actExec;
+    else if (execBase === 'cardAct') baseExec = item.cardActExec;
+
     const pending = pendingAmountMap[item.cleanName] || 0;
     const totalExecWithPending = baseExec + pending;
-    
-    // 지출대기액을 반영한 실시간 집행률 및 잔액
     const rate = item.budget > 0 ? (totalExecWithPending / item.budget * 100) : 0;
     const remain = item.budget - totalExecWithPending;
 
+    // 분야별 통계에 지출대기액 반영
+    if (item.sectors.has('신속')) sectorStats.quick.pending += pending;
+    if (item.sectors.has('소비')) sectorStats.consume.pending += pending;
+    if (item.sectors.has('투자')) sectorStats.invest.pending += pending;
+
+    const sectorArray = Array.from(item.sectors);
+    const sectorDesc = sectorArray.length > 0 ? ` (${sectorArray.join(', ')})` : '';
+
     return {
       ...item,
+      sectorArray: sectorArray,
+      exportName: item.cleanName + sectorDesc,
       exec: baseExec,
       pending: pending,
       totalExecWithPending: totalExecWithPending,
@@ -713,7 +1016,16 @@ function renderTable(keepFocus = false) {
     };
   });
 
-  // 정렬 수행
+  /* 3. 분야 필터링 적용 */
+  if (currentSectorFilter === 'quick') {
+    items = items.filter(it => it.sectors.has('신속'));
+  } else if (currentSectorFilter === 'consume') {
+    items = items.filter(it => it.sectors.has('소비'));
+  } else if (currentSectorFilter === 'invest') {
+    items = items.filter(it => it.sectors.has('투자'));
+  }
+
+  /* 4. 정렬 */
   items.sort((a, b) => {
     if (currentSortKey === 'name') {
       return currentSortOrder === 'asc' 
@@ -737,9 +1049,7 @@ function renderTable(keepFocus = false) {
     if (iconSpan) iconSpan.textContent = currentSortOrder === 'asc' ? ' ▲' : ' ▼';
   }
 
-  // 현재 포커스 엘리먼트 기억
   const activeElementId = document.activeElement ? document.activeElement.id : null;
-
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
@@ -758,14 +1068,11 @@ function renderTable(keepFocus = false) {
     tPending += item.pending;
 
     const rateStr = item.rate.toFixed(1);
-
-    // [반영 1] 집행률 셀 인라인 막대 시각화
     const progressPercent = Math.min(Math.max(item.rate, 0), 100);
     const barColor = item.rate >= 80 ? 'rgba(3, 199, 90, 0.18)' : 'rgba(217, 119, 6, 0.18)';
     const rateTextColor = item.rate >= 80 ? '#029f45' : '#d97706';
 
     const inputId = `input_pending_${idx}`;
-
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="text-left">${item.htmlName}</td>
@@ -776,7 +1083,7 @@ function renderTable(keepFocus = false) {
       <td>${item.grantQ.toLocaleString()}</td>
       <td style="color:#718096;">${item.actR.toLocaleString()}</td>
       <td>${item.expS.toLocaleString()}</td>
-      <td class="highlight-cell">${item.exec.toLocaleString()}</td>
+      <td class="highlight-cell" style="color:#02692e; background:#f6fcf8;">${item.exec.toLocaleString()}</td>
       <td style="text-align:center; background:#fffbeb;">
         <input type="text" id="${inputId}" class="input-pending"
           value="${item.pending ? item.pending.toLocaleString() : ''}"
@@ -826,14 +1133,32 @@ function renderTable(keepFocus = false) {
   `;
   tbody.appendChild(totalTr);
 
-  // 상단 요약 카드 업데이트
+  // 상단 종합 요약 카드 업데이트
   document.getElementById('sumBudget').textContent = tBudget.toLocaleString() + '원';
   document.getElementById('sumExec').textContent = tExec.toLocaleString() + '원';
   document.getElementById('sumPending').textContent = tPending.toLocaleString() + '원';
   document.getElementById('sumRate').textContent = totalRate + '%';
   document.getElementById('sumRemain').textContent = totalRemain.toLocaleString() + '원';
 
-  // 포커스 복원 (지출예정액 입력 연속성 지원)
+  /* 5. 세출분야별 통계 카드 UI 실시간 갱신 */
+  const updateSectorCard = (key, bId, eId, pId, rId, fillId, rateId) => {
+    const st = sectorStats[key];
+    const totalExec = st.exec + st.pending;
+    const rateVal = st.budget > 0 ? (totalExec / st.budget * 100) : 0;
+    const remainVal = st.budget - totalExec;
+
+    document.getElementById(bId).textContent = st.budget.toLocaleString() + '원';
+    document.getElementById(eId).textContent = st.exec.toLocaleString() + '원';
+    document.getElementById(pId).textContent = st.pending.toLocaleString() + '원';
+    document.getElementById(rId).textContent = remainVal.toLocaleString() + '원';
+    document.getElementById(rateId).textContent = rateVal.toFixed(1) + '%';
+    document.getElementById(fillId).style.width = Math.min(Math.max(rateVal, 0), 100) + '%';
+  };
+
+  updateSectorCard('quick', 'quickBudget', 'quickExec', 'quickPending', 'quickRemain', 'quickProgressFill', 'quickRate');
+  updateSectorCard('consume', 'consumeBudget', 'consumeExec', 'consumePending', 'consumeRemain', 'consumeProgressFill', 'consumeRate');
+  updateSectorCard('invest', 'investBudget', 'investExec', 'investPending', 'investRemain', 'investProgressFill', 'investRate');
+
   if (keepFocus && activeElementId) {
     const el = document.getElementById(activeElementId);
     if (el) el.focus();
@@ -857,35 +1182,39 @@ function renderTable(keepFocus = false) {
     },
     modeName: modeName,
     scopeText: scopeText,
-    execBase: execBase
+    execBase: execBase,
+    sectorFilter: currentSectorFilter
   };
 }
 
-/* [반영 1] 한글(HWP) 복사용 TSV 클립보드 복사 함수 (지출대기액 및 기준 완벽 반영) */
+/* 한글(HWP) 표 붙여넣기용 TSV 복사 함수 */
 function copyForHWP() {
   if (!currentExportPayload || !currentExportPayload.items.length) {
     alert("복사할 데이터가 없습니다. 먼저 엑셀 파일을 업로드해 주세요.");
     return;
   }
   
-  const baseName = (currentExportPayload.execBase === 'real') ? "실집행금액" : "집행금액(원인행위)";
+  let baseName = "실집행금액";
+  if (currentExportPayload.execBase === 'act') baseName = "원인행위액";
+  else if (currentExportPayload.execBase === 'cardAct') baseName = "단위원인행위액[L]";
+
   let tsv = `구분\t예산현액\t지출액\t${baseName}\t지출대기액\t최종집행률\t예산잔액\n`;
 
   currentExportPayload.items.forEach(item => {
-    tsv += `${item.cleanName}\t${item.budget}\t${item.expM}\t${item.exec}\t${item.pending}\t${item.rate.toFixed(1)}%\t${item.remain}\n`;
+    tsv += `${item.exportName}\t${item.budget}\t${item.expM}\t${item.exec}\t${item.pending}\t${item.rate.toFixed(1)}%\t${item.remain}\n`;
   });
   
   const tot = currentExportPayload.totals;
   tsv += `합계\t${tot.budget}\t${tot.expM}\t${tot.exec}\t${tot.pending}\t${tot.rate.toFixed(1)}%\t${tot.remain}\n`;
   
   navigator.clipboard.writeText(tsv).then(() => {
-    alert("한글(HWP) 표 붙여넣기용 데이터가 클립보드에 복사되었습니다.\n\n한글 문서의 표 안을 블록 지정하거나 첫 번째 셀에 커서를 둔 후 [Ctrl + V]를 누르세요.");
+    alert("한글(HWP) 표 붙여넣기용 데이터가 클립보드에 복사되었습니다.\n\n한글 문서의 표 안을 블록 지정하거나 첫 셀에 커서를 둔 후 [Ctrl + V]를 누르세요.");
   }).catch(err => {
     alert("클립보드 복사 중 오류가 발생했습니다. 브라우저 권한을 확인해 주세요.");
   });
 }
 
-/* 고품질 엑셀(#,##0 서식 및 HWP 공문서 스타일) 전용 생성기 */
+/* 엑셀 정식 서식 생성 및 다운로드 */
 function exportToExcel() {
   if (!currentExportPayload || !currentExportPayload.items || currentExportPayload.items.length === 0) {
     alert("내보낼 집계 데이터가 없습니다. 먼저 엑셀 파일을 업로드해 주세요.");
@@ -926,8 +1255,17 @@ function exportToExcel() {
     String(now.getHours()).padStart(2, '0') + ":" +
     String(now.getMinutes()).padStart(2, '0');
   
-  const baseDesc = (currentExportPayload.execBase === 'real') ? "실집행금액기준[M-Q+S]" : "원인행위액기준[L-P+R]";
-  const metaText = `■ 산출기준: ${baseDesc}  |  ■ 정렬/분류: ${currentExportPayload.modeName}  |  ■ 집계대상: ${currentExportPayload.scopeText}  |  ■ 출력일시: ${dateStr}`;
+  let baseDesc = "실집행금액기준[M-Q+S]";
+  if (currentExportPayload.execBase === 'act') baseDesc = "원인행위액기준[L-P+R]";
+  else if (currentExportPayload.execBase === 'cardAct') baseDesc = "단위과제원인행위액기준[L]";
+
+  const filterDesc = currentExportPayload.sectorFilter === 'all' ? '전체세목' : (
+    currentExportPayload.sectorFilter === 'quick' ? '신속집행대상' : (
+      currentExportPayload.sectorFilter === 'consume' ? '소비분야' : '투자분야'
+    )
+  );
+
+  const metaText = `■ 산출기준: ${baseDesc}  |  ■ 분류: ${currentExportPayload.modeName} (${filterDesc})  |  ■ 대상: ${currentExportPayload.scopeText}  |  ■ 출력: ${dateStr}`;
   
   ws[XLSX.utils.encode_cell({ c: 0, r: 1 })] = {
     v: metaText,
@@ -947,7 +1285,9 @@ function exportToExcel() {
     else if (c >= 1 && c <= 3) { text = "단위과제카드"; bg = "EDF2F7"; }
     else if (c >= 4 && c <= 7) { text = "일상경비교부액"; bg = "F7FAFC"; }
     else if (c >= 8 && c <= 11) { 
-      text = (currentExportPayload.execBase === 'real') ? "최종 집행 현황 (실집행 기준)" : "최종 집행 현황 (원인행위 기준)";
+      if (currentExportPayload.execBase === 'real') text = "최종 집행 현황 (실집행금액 기준)";
+      else if (currentExportPayload.execBase === 'act') text = "최종 집행 현황 (원인행위액 기준)";
+      else text = "최종 집행 현황 (단위원인행위액[L] 기준)";
       bg = "E6F4EA"; color = "02692E"; 
     }
 
@@ -964,7 +1304,10 @@ function exportToExcel() {
   }
 
   // 3-2. 헤더 2단 (Row 4)
-  const execColTitle = (currentExportPayload.execBase === 'real') ? "실집행금액 [M-Q+S]" : "집행금액 [L-P+R]";
+  let execColTitle = "실집행금액 [M-Q+S]";
+  if (currentExportPayload.execBase === 'act') execColTitle = "원인행위액 [L-P+R]";
+  else if (currentExportPayload.execBase === 'cardAct') execColTitle = "단위원인행위액 [L]";
+
   const h2_cols = [
     { c: 0, title: "구 분", bg: "F4F6F9", color: "2B3036" },
     { c: 1, title: "예산현액 [I]", bg: "EDF2F7", color: "2B3036" },
@@ -1002,16 +1345,15 @@ function exportToExcel() {
     { s: { c: 8, r: 3 }, e: { c: 11, r: 3 } }
   ];
 
-  // 4. 데이터 행 출력 (Row 5부터 시작)
+  // 4. 데이터 행 출력
   let currentRow = 5;
   currentExportPayload.items.forEach((item, idx) => {
     const isEven = idx % 2 === 1;
     const bg = isEven ? "FAFBFC" : "FFFFFF";
     const highlightBg = isEven ? "F0FBF4" : "F6FCF8";
 
-    // Col 0: 구분
     ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-      v: item.cleanName,
+      v: item.exportName,
       t: 's',
       s: {
         font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "111111" } },
@@ -1021,7 +1363,6 @@ function exportToExcel() {
       }
     };
 
-    // Cols 1~7: 단위과제 및 일상경비 원본 숫자
     const numFields = [item.budget, item.actL, item.expM, item.distP, item.grantQ, item.actR, item.expS];
     numFields.forEach((val, fIdx) => {
       ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
@@ -1037,7 +1378,7 @@ function exportToExcel() {
       };
     });
 
-    // Col 8: 집행금액 (실집행 또는 원인행위)
+    // Col 8: 집행금액
     ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
       v: item.exec,
       t: 'n',
@@ -1063,7 +1404,7 @@ function exportToExcel() {
       }
     };
 
-    // Col 10: 최종 집행률 (0.0% 서식)
+    // Col 10: 최종 집행률
     const rateDecimal = item.budget > 0 ? (item.totalExecWithPending / item.budget) : 0;
     ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
       v: rateDecimal,
@@ -1129,7 +1470,6 @@ function exportToExcel() {
     };
   });
 
-  // 합계: 집행금액
   ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
     v: tot.exec,
     t: 'n',
@@ -1142,7 +1482,6 @@ function exportToExcel() {
     }
   };
 
-  // 합계: 지출대기액
   ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
     v: tot.pending,
     t: 'n',
@@ -1155,7 +1494,6 @@ function exportToExcel() {
     }
   };
 
-  // 합계: 최종 집행률
   const totalRateDec = tot.budget > 0 ? ((tot.exec + tot.pending) / tot.budget) : 0;
   ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
     v: totalRateDec,
@@ -1169,7 +1507,6 @@ function exportToExcel() {
     }
   };
 
-  // 합계: 예산잔액
   ws[XLSX.utils.encode_cell({ c: 11, r: currentRow })] = {
     v: tot.remain,
     t: 'n',
@@ -1186,9 +1523,12 @@ function exportToExcel() {
 
   // 6. 하단 주석
   currentRow++;
-  const formulaNote = (currentExportPayload.execBase === 'real') 
-    ? "* 실집행금액 = 단위과제 지출액[M] - 일상경비 교부액[Q] + 일상경비 지출액[S]" 
-    : "* 원인행위액 기준 집행액 = 단위과제 원인행위액[L] - 일상경비 배부액[P] + 일상경비 원인행위액[R]";
+  let formulaNote = "* 실집행금액 = 단위과제 지출액[M] - 일상경비 교부액[Q] + 일상경비 지출액[S]";
+  if (currentExportPayload.execBase === 'act') {
+    formulaNote = "* 원인행위액 기준 집행액 = 단위과제 원인행위액[L] - 일상경비 배부액[P] + 일상경비 원인행위액[R]";
+  } else if (currentExportPayload.execBase === 'cardAct') {
+    formulaNote = "* 단위과제카드 원인행위액 기준 집행액 = 단위과제카드 원인행위액[L열]";
+  }
   
   ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
     v: formulaNote,
@@ -1205,7 +1545,7 @@ function exportToExcel() {
   ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: 11, r: currentRow } });
   ws['!merges'] = merges;
   ws['!cols'] = [
-    { wch: 34 }, // 구분
+    { wch: 36 }, // 구분
     { wch: 17 }, // 예산현액
     { wch: 15 }, // 단위원인
     { wch: 15 }, // 단위지출
@@ -1224,7 +1564,7 @@ function exportToExcel() {
   for (let i = 5; i < currentRow - 3; i++) {
     ws['!rows'].push({ hpt: 20 });
   }
-  ws['!rows'].push({ hpt: 25 }); // 합계 행 높이
+  ws['!rows'].push({ hpt: 25 });
 
   XLSX.utils.book_append_sheet(wb, ws, "예산집행정리");
 
