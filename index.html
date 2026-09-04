@@ -3,249 +3,248 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>부산창의융합교육원 예산 정리 프로그램</title>
-<!-- 엑셀 스타일 및 숫자 서식 지원 라이브러리 -->
+<title>부산광역시교육청 교육비특별회계 예산 정리 프로그램</title>
+<!-- Pretendard 웹폰트 및 Font Awesome -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- 엑셀 서식 지원 라이브러리 -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
   :root {
-    --naver-green: #03C75A;
-    --naver-green-dark: #029f45;
-    --naver-green-light: #f0fdf4;
-    --naver-green-border: #bbf7d0;
-    --blue-accent: #2563eb;
-    --purple-accent: #7c3aed;
-    --orange-accent: #ea580c;
-    --hwp-border-dark: #b8bfc7;
-    --hwp-border: #d3d8df;
-    --hwp-header-bg: #f4f6f9;
-    --bg-gray: #f5f6f8;
-    --text-main: #1e2022;
-    --text-sub: #636b73;
+    --primary: #1e3a8a;
+    --primary-light: #eff6ff;
+    --gov-slate: #1e293b;
+    --gov-sub: #475569;
+    --bg-main: #f8fafc;
     --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --border-dark: #cbd5e1;
+    --table-header: #f1f5f9;
+    
+    /* 톤다운된 보조 강조색 */
+    --emerald-text: #047857;
+    --emerald-bg: #ecfdf5;
+    --emerald-border: #a7f3d0;
+    --blue-text: #1d4ed8;
+    --blue-bg: #eff6ff;
+    --purple-text: #6b21a8;
+    --purple-bg: #f5f3ff;
+    --amber-text: #b45309;
+    --amber-bg: #fffbeb;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
   
   body {
-    font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, sans-serif;
-    margin: 0; padding: 20px 24px 40px; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.5;
+    margin: 0; padding: 24px 20px 48px; background-color: var(--bg-main); color: var(--gov-slate); line-height: 1.5;
     user-select: none;
   }
+  input, textarea, select { user-select: text !important; }
   .container { max-width: 1560px; margin: 0 auto; }
 
-  /* 헤더 */
+  /* 헤더 통일 */
   .header {
-    background: var(--card-bg); padding: 20px 26px; border-radius: 8px;
-    border: 1px solid var(--hwp-border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 16px;
+    background: var(--card-bg); padding: 20px 24px; border-radius: 14px;
+    border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.03); margin-bottom: 16px;
   }
   .header-top {
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;
   }
   .title-area { display: flex; align-items: center; gap: 10px; }
   .logo-icon {
-    width: 28px; height: 28px; background-color: var(--naver-green); color: white;
-    border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 16px;
+    width: 32px; height: 32px; background-color: var(--primary); color: white;
+    border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);
   }
-  h1 { margin: 0; font-size: 21px; color: #111; font-weight: 700; letter-spacing: -0.5px; }
+  h1 { margin: 0; font-size: 19px; color: var(--gov-slate); font-weight: 700; letter-spacing: -0.3px; }
   .version-badge {
-    background-color: var(--naver-green-light); color: var(--naver-green-dark);
-    border: 1px solid var(--naver-green-border); padding: 2px 8px; border-radius: 4px;
-    font-size: 11.5px; font-weight: 700;
+    background-color: var(--emerald-bg); color: var(--emerald-text);
+    border: 1px solid var(--emerald-border); padding: 3px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 700;
   }
+  .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .feedback-btn {
     display: inline-flex; align-items: center; gap: 6px; background-color: #ffffff;
-    border: 1px solid var(--hwp-border); color: #333; padding: 5px 12px; border-radius: 6px;
-    font-size: 12.5px; text-decoration: none; font-weight: 600; transition: 0.15s;
+    border: 1px solid var(--border-dark); color: #334155; padding: 5px 12px; border-radius: 8px;
+    font-size: 12px; text-decoration: none; font-weight: 600; transition: all 0.15s;
   }
-  .feedback-btn:hover { border-color: var(--naver-green); color: var(--naver-green-dark); background: var(--naver-green-light); }
-  .subtitle { margin: 0; color: var(--text-sub); font-size: 13px; }
+  .feedback-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+  .security-tag {
+    display: inline-flex; align-items: center; gap: 6px; background-color: #f1f5f9;
+    border: 1px solid var(--border-color); color: #475569; padding: 5px 10px; border-radius: 8px; font-size: 11.5px;
+  }
+  .subtitle { margin: 0; color: #64748b; font-size: 12.5px; }
 
   .guide-box {
-    background-color: #fafbfc; border: 1px solid var(--hwp-border); border-left: 4px solid var(--naver-green);
-    padding: 11px 16px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; line-height: 1.6; color: #333;
+    background-color: #f8fafc; border: 1px solid var(--border-color); border-left: 3.5px solid var(--primary);
+    padding: 10px 14px; margin-top: 12px; border-radius: 6px; font-size: 12px; line-height: 1.6; color: #475569;
   }
-  .guide-box strong { color: var(--naver-green-dark); }
-  .guide-box ol { margin: 3px 0 0 18px; padding: 0; }
+  .guide-box strong { color: var(--primary); }
+  .guide-box ol { margin: 2px 0 0 16px; padding: 0; }
 
   /* 파일 드롭존 */
   .drop-zone {
-    border: 2px dashed #a7e3be; background: var(--card-bg); border-radius: 8px;
-    padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; margin-bottom: 16px;
+    border: 1.5px dashed #cbd5e1; background: var(--card-bg); border-radius: 12px;
+    padding: 24px; text-align: center; cursor: pointer; transition: all 0.15s; margin-bottom: 16px;
   }
-  .drop-zone:hover { background-color: var(--naver-green-light); border-color: var(--naver-green); }
+  .drop-zone:hover { background-color: #f1f5f9; border-color: #94a3b8; }
   .drop-zone input { display: none; }
-  .drop-zone-icon { font-size: 28px; margin-bottom: 6px; }
+  .drop-zone-icon { font-size: 26px; color: #64748b; margin-bottom: 6px; }
 
   /* 컨트롤 바 */
   .controls {
-    background: var(--card-bg); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--hwp-border);
+    background: var(--card-bg); padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border-color);
     display: flex; flex-direction: column; gap: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03); margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 16px;
   }
   .controls-row {
-    display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center;
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center;
   }
-  .tab-group-wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .tab-subgroup { display: flex; align-items: center; gap: 5px; }
-  .subgroup-label { font-size: 12px; font-weight: 700; color: #444; background: #eaedf1; padding: 4px 8px; border-radius: 4px; }
+  .tab-group-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .tab-subgroup { display: flex; align-items: center; gap: 4px; }
+  .subgroup-label { font-size: 11.5px; font-weight: 700; color: #475569; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; }
   
   .btn-tab {
-    border: 1px solid var(--hwp-border); background: white; padding: 6px 11px;
-    border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.12s; color: #333;
+    border: 1px solid var(--border-color); background: white; padding: 5px 10px;
+    border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.12s; color: #475569;
   }
-  .btn-tab:hover { background-color: #f1f3f5; }
-  .btn-tab.active { background: var(--naver-green); color: white; border-color: var(--naver-green); }
+  .btn-tab:hover { background-color: #f8fafc; color: var(--gov-slate); }
+  .btn-tab.active { background: var(--gov-slate); color: white; border-color: var(--gov-slate); font-weight: 700; }
 
-  /* 3종 집행 기준 선택 버튼 */
   .base-toggle-wrap { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .btn-base {
-    border: 1px solid var(--hwp-border); background: white; padding: 6px 11px;
-    border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s; color: #444;
+    border: 1px solid var(--border-color); background: white; padding: 5px 10px;
+    border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.15s; color: #475569;
   }
   .btn-base:hover { background-color: #f8fafc; }
-  .btn-base.active-real { background: var(--naver-green); color: white; border-color: var(--naver-green-dark); }
-  .btn-base.active-act { background: var(--blue-accent); color: white; border-color: #1d4ed8; }
-  .btn-base.active-card-act { background: var(--purple-accent); color: white; border-color: #6d28d9; }
+  .btn-base.active-real { background: var(--emerald-bg); color: var(--emerald-text); border-color: var(--emerald-border); font-weight: 700; }
+  .btn-base.active-act { background: var(--blue-bg); color: var(--blue-text); border-color: #bfdbfe; font-weight: 700; }
+  .btn-base.active-card-act { background: var(--purple-bg); color: var(--purple-text); border-color: #e9d5ff; font-weight: 700; }
 
   select.custom-select {
-    padding: 6px 10px; border-radius: 5px; border: 1px solid var(--hwp-border);
-    font-size: 12px; background-color: white; color: var(--text-main); outline: none;
+    padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border-color);
+    font-size: 12px; background-color: white; color: var(--gov-slate); outline: none; font-weight: 500;
   }
-  select.custom-select:focus { border-color: var(--naver-green); }
+  select.custom-select:focus { border-color: var(--primary); }
 
-  .action-buttons { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .btn-hwp {
-    background: #4b5563; color: white; border: 1px solid #374151;
-    padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
-    display: inline-flex; align-items: center; gap: 5px;
+  .action-buttons { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .btn-action {
+    padding: 5px 11px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: 0.15s;
+    display: inline-flex; align-items: center; gap: 5px; border: 1px solid transparent;
   }
-  .btn-hwp:hover { background: #374151; }
+  .btn-hwp { background: #f1f5f9; color: #334155; border-color: var(--border-dark); }
+  .btn-hwp:hover { background: #e2e8f0; }
   
-  .btn-download {
-    background: var(--naver-green); color: white; border: 1px solid var(--naver-green-dark);
-    padding: 6px 13px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s;
-    display: inline-flex; align-items: center; gap: 5px;
-  }
-  .btn-download:hover { background: var(--naver-green-dark); }
+  .btn-download { background: #047857; color: white; }
+  .btn-download:hover { background: #065f46; }
 
-  .btn-reset-pending {
-    background: white; color: #e11d48; border: 1px solid #fca5a5;
-    padding: 5px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 600; cursor: pointer;
-  }
-  .btn-reset-pending:hover { background: #fff1f2; }
+  .btn-reset-pending { background: white; color: #b91c1c; border-color: #fecaca; }
+  .btn-reset-pending:hover { background: #fef2f2; }
 
-  /* 상단 종합 요약 카드 */
-  .summary-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px; }
+  /* 상단 요약 카드 */
+  .summary-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
   .card {
-    background: var(--card-bg); padding: 13px 16px; border-radius: 8px; border: 1px solid var(--hwp-border);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    background: var(--card-bg); padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   }
-  .card .label { font-size: 11.5px; color: var(--text-sub); margin-bottom: 3px; font-weight: 600; }
-  .card .value { font-size: 17.5px; font-weight: 700; color: #111; }
-  .card .point-green { color: var(--naver-green-dark); }
-  .card .point-blue { color: var(--blue-accent); }
-  .card .point-purple { color: var(--purple-accent); }
-  .card .point-orange { color: #d97706; }
+  .card .label { font-size: 11px; color: #64748b; margin-bottom: 2px; font-weight: 600; }
+  .card .value { font-size: 16.5px; font-weight: 700; color: var(--gov-slate); }
+  .card .point-green { color: var(--emerald-text); }
+  .card .point-orange { color: var(--amber-text); }
 
-  /* 세출분야별(신속·소비·투자) 통계 보드 */
+  /* 분야별 통계 보드 */
   .sector-board {
-    background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border);
-    padding: 15px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color);
+    padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   }
   .sector-board-header {
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--hwp-border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border-color);
   }
-  .sector-board-title { font-size: 13.5px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 6px; }
-  .sector-board-sub { font-size: 11.5px; color: var(--text-sub); }
+  .sector-board-title { font-size: 13px; font-weight: 700; color: var(--gov-slate); display: flex; align-items: center; gap: 6px; }
+  .sector-board-sub { font-size: 11px; color: #64748b; }
 
-  .sector-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .sector-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .sector-card {
-    border-radius: 7px; padding: 12px 14px; border: 1px solid var(--hwp-border);
-    display: flex; flex-direction: column; gap: 8px; position: relative;
+    border-radius: 8px; padding: 10px 12px; border: 1px solid var(--border-color);
+    display: flex; flex-direction: column; gap: 6px; background: #fafbfc;
   }
-  .sector-card.quick { background: #fffaf5; border-top: 3.5px solid var(--orange-accent); }
-  .sector-card.consume { background: #f8faff; border-top: 3.5px solid var(--blue-accent); }
-  .sector-card.invest { background: #faf5ff; border-top: 3.5px solid var(--purple-accent); }
+  .sector-card.quick { border-top: 3px solid #ea580c; }
+  .sector-card.consume { border-top: 3px solid #2563eb; }
+  .sector-card.invest { border-top: 3px solid #7c3aed; }
 
   .sector-card-head { display: flex; justify-content: space-between; align-items: center; }
   .sector-badge-title {
-    font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;
   }
-  .badge-title-quick { background: #ffedd5; color: #c2410c; }
-  .badge-title-consume { background: #dbeafe; color: #1e40af; }
-  .badge-title-invest { background: #f3e8ff; color: #6b21a8; }
-  .sector-target-count { font-size: 11px; color: var(--text-sub); font-weight: 600; }
+  .badge-title-quick { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+  .badge-title-consume { background: #eff6ff; color: #1e40af; border: 1px solid #dbeafe; }
+  .badge-title-invest { background: #faf5ff; color: #6b21a8; border: 1px solid #f3e8ff; }
+  .sector-target-count { font-size: 11px; color: #64748b; }
 
   .sector-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; }
-  .sector-row .s-name { color: #555; }
-  .sector-row .s-num { font-weight: 700; color: #222; }
+  .sector-row .s-name { color: #64748b; }
+  .sector-row .s-num { font-weight: 600; color: #1e293b; }
 
-  .sector-progress-wrap { margin-top: 2px; }
+  .sector-progress-wrap { margin-top: 3px; }
   .sector-progress-bar {
-    width: 100%; height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 4px;
+    width: 100%; height: 5px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 4px;
   }
-  .sector-progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
-  .fill-quick { background: linear-gradient(90deg, #fdba74, #ea580c); }
-  .fill-consume { background: linear-gradient(90deg, #93c5fd, #2563eb); }
-  .fill-invest { background: linear-gradient(90deg, #d8b4fe, #7c3aed); }
-  .sector-rate-box {
-    display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;
-  }
+  .sector-progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .fill-quick { background: #ea580c; }
+  .fill-consume { background: #2563eb; }
+  .fill-invest { background: #7c3aed; }
+  .sector-rate-box { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; }
 
-  /* 테이블 영역 */
+  /* 테이블 스타일 */
   .table-container {
-    background: var(--card-bg); border-radius: 8px; border: 1px solid var(--hwp-border-dark);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;
+    background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow-x: auto;
   }
   table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; min-width: 1300px; }
-  th, td { padding: 6px 8px; border: 1px solid var(--hwp-border); white-space: nowrap; }
-  th { background: var(--hwp-header-bg); font-weight: 700; color: #2b3036; text-align: center; }
-  th.group-header { border-bottom: 1px solid var(--hwp-border-dark); font-size: 11.5px; }
+  th, td { padding: 6px 8px; border: 1px solid var(--border-color); white-space: nowrap; }
+  th { background: var(--table-header); font-weight: 600; color: #334155; text-align: center; }
+  th.group-header { border-bottom: 1px solid var(--border-dark); font-size: 11px; color: #475569; }
   
   th.sortable { cursor: pointer; user-select: none; }
-  th.sortable:hover { background-color: #e5e9ef; color: var(--naver-green-dark); }
-  th.sort-active { background-color: #e6f6ee !important; color: #027a35 !important; border-bottom: 2px solid var(--naver-green); }
-  .sort-icon { display: inline-block; font-size: 9px; margin-left: 3px; color: var(--naver-green); }
+  th.sortable:hover { background-color: #e2e8f0; }
+  th.sort-active { background-color: #e0f2fe !important; color: #0369a1 !important; border-bottom: 2px solid #0284c7; }
+  .sort-icon { display: inline-block; font-size: 9px; margin-left: 3px; }
 
   td.text-left { text-align: left; }
   tr:nth-child(even) { background-color: #fafbfc; }
-  tr:hover { background-color: #f1f8f4; }
+  tr:hover { background-color: #f1f5f9; }
   tr.total-row {
-    background: #eef9f2 !important; font-weight: 700;
-    border-top: 2px solid var(--naver-green) !important; border-bottom: 2px solid var(--naver-green) !important;
+    background: #f1f5f9 !important; font-weight: 700;
+    border-top: 2px solid #94a3b8 !important; border-bottom: 2px solid #94a3b8 !important;
   }
-  .highlight-cell { font-weight: 700; }
+  .highlight-cell { font-weight: 600; }
 
-  /* 세목별 분야 구분 뱃지 */
   .badge-tag {
-    display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 5px;
-    border-radius: 3px; margin-left: 3px; vertical-align: middle; line-height: 1.3;
+    display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 4px;
+    border-radius: 3px; margin-left: 2px; vertical-align: middle;
   }
-  .tag-quick { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
-  .tag-consume { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-  .tag-invest { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+  .tag-quick { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+  .tag-consume { background: #eff6ff; color: #1e40af; border: 1px solid #dbeafe; }
+  .tag-invest { background: #faf5ff; color: #6b21a8; border: 1px solid #f3e8ff; }
 
-  /* 지출예정액 인풋 */
   .input-pending {
-    width: 105px; padding: 4px 6px; font-size: 12px; text-align: right;
+    width: 95px; padding: 3px 5px; font-size: 11.5px; text-align: right;
     border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: #1e293b;
-    outline: none; transition: 0.15s; user-select: text;
+    outline: none; transition: 0.15s; background-color: #fff;
   }
   .input-pending:focus {
-    border-color: var(--naver-green); box-shadow: 0 0 0 2px rgba(3, 199, 90, 0.2); background-color: #fff;
+    border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
   }
 
   .badge-item {
-    background-color: #eef2f6; color: #2d3748; padding: 2px 6px; border-radius: 4px;
-    font-size: 11.5px; font-weight: 600; border: 1px solid #d8e0e8; margin-right: 4px;
+    background-color: #f1f5f9; color: #475569; padding: 2px 5px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; border: 1px solid var(--border-color); margin-right: 4px;
   }
-  .badge-sub { font-weight: 600; color: #1a202c; }
+  .badge-sub { font-weight: 600; color: #1e293b; }
 
-  /* 푸터 */
   .footer {
-    padding: 24px 0 10px; border-top: 1px solid var(--hwp-border); margin-top: 36px;
-    text-align: center; font-size: 12px; color: var(--text-sub);
+    padding: 24px 0 10px; border-top: 1px solid var(--border-color); margin-top: 36px;
+    text-align: center; font-size: 11.5px; color: #64748b;
   }
 </style>
 </head>
@@ -254,95 +253,95 @@
   <div class="header">
     <div class="header-top">
       <div class="title-area">
-        <div class="logo-icon">창</div>
-        <h1>부산광역시교육청창의융합교육원 예산 정리 프로그램</h1>
+        <div class="logo-icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <h1>부산광역시교육청 교육비특별회계 예산 정리 프로그램</h1>
         <span class="version-badge">20260904 개정판</span>
       </div>
-      <a href="mailto:hola3927@korea.kr" class="feedback-btn" title="오류 제보 및 기능 제안">
-        ✉ 피드백 및 문의: <strong>hola3927@korea.kr</strong>
-      </a>
+      <div class="header-right">
+        <a href="mailto:hola3927@korea.kr" class="feedback-btn" title="오류 제보 및 기능 제안">
+          <i class="fa-regular fa-envelope text-blue-600"></i>
+          <span>피드백 및 문의: <strong>hola3927@korea.kr</strong></span>
+        </a>
+        <div class="security-tag">
+          <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+          <span>100% 브라우저 로컬 분석 (외부 유출 안심)</span>
+        </div>
+      </div>
     </div>
-    <p class="subtitle">K-에듀파인 예산현액 엑셀 파일을 일괄 분석하여 실집행/원인행위/단위원인 기준 분류 및 신속·소비·투자 분야별 통계와 지출대기액 시뮬레이션을 제공합니다.</p>
+    <p class="subtitle">K-에듀파인 예산현액 엑셀 파일을 일괄 분석하여 실집행/원인행위 기준 분류 및 신속·소비·투자 분야별 통계를 제공합니다.</p>
     
     <div class="guide-box">
-      <strong>K-에듀파인 엑셀 파일 다운로드 방법 안내</strong>
-      <ol>
-        <li>K-에듀파인 > 재정사업관리 > 사업담당재정관리 > 예산관리 > 예산편성 > 사업관리카드</li>
-        <li>조회 후 정리할 사업관리카드(단위과제카드) 번호 클릭</li>
-        <li>상단 <strong>[예산현액]</strong> 탭 클릭 후 <strong>"일상경비 포함" 체크박스 선택</strong></li>
-        <li>우측 상단 <strong>[파일]</strong> 버튼을 클릭하여 엑셀 다운로드 (다중 파일 지원)</li>
-      </ol>
+      <strong>K-에듀파인 엑셀 다운로드 방법:</strong>
+      [재정사업관리] &gt; [사업담당재정관리] &gt; [예산관리] &gt; [예산편성] &gt; [사업관리카드] 조회 후 번호 클릭 &gt; <strong>[예산현액]</strong> 탭에서 <strong>"일상경비 포함" 체크</strong> 후 상단 <strong>[파일]</strong> 다운로드 (다중 파일 지원)
     </div>
   </div>
 
   <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
     <input type="file" id="fileInput" multiple accept=".xlsx, .xls">
-    <div class="drop-zone-icon">📥</div>
-    <strong style="font-size:14.5px; color:#222;">K-에듀파인 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭하여 선택하세요</strong>
-    <div id="fileListText" style="margin-top: 5px; color: var(--text-sub); font-size: 12.5px;">여러 개의 단위과제카드 엑셀 파일을 한 번에 업로드할 수 있습니다.</div>
-    <div id="fileListText" style="margin-top: 5px; color: var(--text-sub); font-size: 12.5px;">개인정보 및 보안 파일이 외부 서버로 전송되지 않고 브라우저 내부에서만 안전하게 처리됩니다.</div>
+    <div class="drop-zone-icon"><i class="fa-solid fa-file-excel"></i></div>
+    <div style="font-size:14px; font-weight:700; color:#334155;">K-에듀파인 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭하여 선택하세요</div>
+    <div id="fileListText" style="margin-top: 4px; color: #64748b; font-size: 12px;">여러 개의 단위과제카드 엑셀 파일을 한 번에 업로드할 수 있습니다.</div>
   </div>
 
   <div class="controls" id="controls" style="display:none;">
-    <!-- 1행: 3종 집행 산출 기준 토글 및 액션 버튼 -->
+    <!-- 1행: 집행 기준 토글 및 액션 버튼 -->
     <div class="controls-row">
       <div class="base-toggle-wrap">
-        <span class="subgroup-label">📊 집행 산출 기준</span>
-        <button class="btn-base active-real" id="btnBaseReal" onclick="setExecBase('real')" title="1번: 실집행금액 [출금액]">
-          🟢 실집행 기준 [M - Q + S]
+        <span class="subgroup-label"><i class="fa-solid fa-sliders mr-1"></i>집행 산출 기준</span>
+        <button class="btn-base active-real" id="btnBaseReal" onclick="setExecBase('real')">
+          실집행 기준 [M - Q + S]
         </button>
-        <button class="btn-base" id="btnBaseAct" onclick="setExecBase('act')" title="2번: 원인행위액 [수입지출 및 일상경비 원인행위 결재액]">
-          🔵 수입지출/일상경비 원인행위 기준 [L - P + R]
+        <button class="btn-base" id="btnBaseAct" onclick="setExecBase('act')">
+          원인행위 기준 [L - P + R]
         </button>
-        <button class="btn-base" id="btnBaseCardAct" onclick="setExecBase('cardAct')" title="3번: 단위과제카드 원인행위액 [수입지출 원인행위액(일상경비 배부액]">
-          🟣 수입지출 원인행위(배부액) 기준 [L]
+        <button class="btn-base" id="btnBaseCardAct" onclick="setExecBase('cardAct')">
+          단위원인(배부액) 기준 [L]
         </button>
       </div>
 
       <div class="action-buttons">
-        <button class="btn-reset-pending" onclick="resetAllPending()" title="입력된 지출예정액을 모두 0으로 초기화합니다.">🔄 지출예정액 초기화</button>
-        <button class="btn-hwp" onclick="copyForHWP()">📋 한글(HWP) 표 복사</button>
-        <button class="btn-download" onclick="exportToExcel()">📊 엑셀 정식 서식 다운로드</button>
+        <button class="btn-action btn-reset-pending" onclick="resetAllPending()"><i class="fa-solid fa-rotate-left"></i> 대기액 초기화</button>
+        <button class="btn-action btn-hwp" onclick="copyForHWP()"><i class="fa-regular fa-copy"></i> HWP 표 복사</button>
+        <button class="btn-action btn-download" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> 엑셀 서식 다운로드</button>
       </div>
     </div>
 
-    <!-- 2행: 분류 모드 탭, 분야 필터, 정렬 기준 -->
+    <!-- 2행: 분류 모드 및 필터 -->
     <div class="controls-row">
       <div class="tab-group-wrap">
         <div class="tab-subgroup">
-          <span class="subgroup-label">1. 비목 기준</span>
-          <button class="btn-tab active" id="btn_bimok" onclick="changeMode('bimok')">1-1. 비목별</button>
-          <button class="btn-tab" id="btn_semok" onclick="changeMode('semok')">1-2. 세목별</button>
+          <span class="subgroup-label">비목</span>
+          <button class="btn-tab active" id="btn_bimok" onclick="changeMode('bimok')">비목별</button>
+          <button class="btn-tab" id="btn_semok" onclick="changeMode('semok')">세목별</button>
         </div>
         <div class="tab-subgroup">
-          <span class="subgroup-label">2. 사업항목 기준</span>
-          <button class="btn-tab" id="btn_item" onclick="changeMode('item')">2. 사업항목별</button>
-          <button class="btn-tab" id="btn_item_bimok" onclick="changeMode('item_bimok')">2-1. 사업항목 내 비목별</button>
-          <button class="btn-tab" id="btn_item_semok" onclick="changeMode('item_semok')">2-2. 사업항목 내 세목별</button>
+          <span class="subgroup-label">사업항목</span>
+          <button class="btn-tab" id="btn_item" onclick="changeMode('item')">항목별</button>
+          <button class="btn-tab" id="btn_item_bimok" onclick="changeMode('item_bimok')">항목-비목별</button>
+          <button class="btn-tab" id="btn_item_semok" onclick="changeMode('item_semok')">항목-세목별</button>
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <span style="font-size: 12px; font-weight: bold; color: #444;">분야 필터:</span>
+      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <span style="font-size: 11.5px; font-weight: 600; color: #475569;">분야 필터:</span>
         <select id="sectorFilterSelect" class="custom-select" onchange="onSectorFilterChange()">
-          <option value="all">전체 비목/세목 표시</option>
-          <option value="quick">⚡ 신속집행 대상 세목만</option>
-          <option value="consume">🛒 소비분야 대상 세목만</option>
-          <option value="invest">🏗️ 투자분야 대상 세목만</option>
+          <option value="all">전체 비목/세목</option>
+          <option value="quick">신속집행 대상</option>
+          <option value="consume">소비분야 대상</option>
+          <option value="invest">투자분야 대상</option>
         </select>
 
-        <span style="font-size: 12px; font-weight: bold; color: #444; margin-left:4px;">정렬:</span>
+        <span style="font-size: 11.5px; font-weight: 600; color: #475569; margin-left:4px;">정렬:</span>
         <select id="sortSelect" class="custom-select" onchange="onSortSelectChange()">
-          <option value="name_asc">구분 순 (기본값 / 가나다·코드순)</option>
+          <option value="name_asc">구분 순 (기본값)</option>
           <option value="budget_desc">예산현액 많은 순</option>
           <option value="exec_desc">집행금액 많은 순</option>
           <option value="rate_desc">최종집행률 높은 순</option>
           <option value="remain_desc">예산잔액 많은 순</option>
           <option value="rate_asc">최종집행률 낮은 순</option>
-          <option value="budget_asc">예산현액 적은 순</option>
         </select>
 
-        <span style="font-size: 12px; font-weight: bold; color: #444; margin-left:4px;">대상:</span>
+        <span style="font-size: 11.5px; font-weight: 600; color: #475569; margin-left:4px;">대상:</span>
         <select id="scopeSelect" class="custom-select" onchange="renderTable()">
           <option value="all">전체 통합 집계</option>
         </select>
@@ -350,123 +349,69 @@
     </div>
   </div>
 
-  <!-- 상단 요약 카드 -->
+  <!-- 요약 카드 5종 -->
   <div class="summary-cards" id="summaryCards" style="display:none;">
     <div class="card"><div class="label">총 예산현액 [I]</div><div class="value" id="sumBudget">0원</div></div>
     <div class="card"><div class="label" id="cardLabelExec">실집행금액 (M - Q + S)</div><div class="value point-green" id="sumExec">0원</div></div>
-    <div class="card"><div class="label">총 지출대기액(예정액)</div><div class="value point-orange" id="sumPending">0원</div></div>
+    <div class="card"><div class="label">지출대기액(예정액)</div><div class="value point-orange" id="sumPending">0원</div></div>
     <div class="card"><div class="label">최종 집행률 (대기반영)</div><div class="value point-green" id="sumRate">0.0%</div></div>
     <div class="card"><div class="label">최종 예산잔액 (대기반영)</div><div class="value" id="sumRemain">0원</div></div>
   </div>
 
-  <!-- 세출분야별(신속·소비·투자) 실시간 통계 보드 -->
+  <!-- 세출분야 통계 보드 -->
   <div class="sector-board" id="sectorBoard" style="display:none;">
     <div class="sector-board-header">
       <div>
         <div class="sector-board-title">
-          <span>🎯 세출분야별 집행 통계 (신속 · 소비 · 투자)</span>
+          <span><i class="fa-solid fa-layer-group text-slate-500"></i> 세출분야별 집행 통계 (신속 · 소비 · 투자)</span>
         </div>
-        <div class="sector-board-sub">* 선택된 집행 산출 기준 및 입력된 지출대기액(예정액)이 실시간 자동 반영됩니다.</div>
+        <div class="sector-board-sub">* 선택된 산출 기준 및 지출대기액이 실시간 자동 반영됩니다.</div>
       </div>
     </div>
     
     <div class="sector-cards-grid">
-      <!-- 1. 신속집행 분야 카드 -->
       <div class="sector-card quick">
         <div class="sector-card-head">
-          <span class="sector-badge-title badge-title-quick">⚡ 신속집행 분야</span>
+          <span class="sector-badge-title badge-title-quick">신속집행 분야</span>
           <span class="sector-target-count">지침 43개 세목</span>
         </div>
-        <div class="sector-row">
-          <span class="s-name">예산현액</span>
-          <span class="s-num" id="quickBudget">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name" id="quickExecTitle">집행금액</span>
-          <span class="s-num" style="color: #c2410c;" id="quickExec">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name">지출대기액</span>
-          <span class="s-num" style="color: #d97706;" id="quickPending">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name">예산잔액</span>
-          <span class="s-num" id="quickRemain">0원</span>
-        </div>
+        <div class="sector-row"><span class="s-name">예산현액</span><span class="s-num" id="quickBudget">0원</span></div>
+        <div class="sector-row"><span class="s-name" id="quickExecTitle">집행금액</span><span class="s-num text-orange-700" id="quickExec">0원</span></div>
+        <div class="sector-row"><span class="s-name">지출대기액</span><span class="s-num text-amber-700" id="quickPending">0원</span></div>
+        <div class="sector-row"><span class="s-name">예산잔액</span><span class="s-num" id="quickRemain">0원</span></div>
         <div class="sector-progress-wrap">
-          <div class="sector-progress-bar">
-            <div class="sector-progress-fill fill-quick" id="quickProgressFill" style="width: 0%;"></div>
-          </div>
-          <div class="sector-rate-box">
-            <span style="color:#c2410c;">최종 집행률</span>
-            <span style="color:#c2410c;" id="quickRate">0.0%</span>
-          </div>
+          <div class="sector-progress-bar"><div class="sector-progress-fill fill-quick" id="quickProgressFill" style="width: 0%;"></div></div>
+          <div class="sector-rate-box"><span style="color:#c2410c;">집행률</span><span style="color:#c2410c;" id="quickRate">0.0%</span></div>
         </div>
       </div>
 
-      <!-- 2. 소비 분야 카드 -->
       <div class="sector-card consume">
         <div class="sector-card-head">
-          <span class="sector-badge-title badge-title-consume">🛒 소비 분야</span>
+          <span class="sector-badge-title badge-title-consume">소비 분야</span>
           <span class="sector-target-count">지침 35개 세목</span>
         </div>
-        <div class="sector-row">
-          <span class="s-name">예산현액</span>
-          <span class="s-num" id="consumeBudget">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name" id="consumeExecTitle">집행금액</span>
-          <span class="s-num" style="color: #1e40af;" id="consumeExec">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name">지출대기액</span>
-          <span class="s-num" style="color: #d97706;" id="consumePending">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name">예산잔액</span>
-          <span class="s-num" id="consumeRemain">0원</span>
-        </div>
+        <div class="sector-row"><span class="s-name">예산현액</span><span class="s-num" id="consumeBudget">0원</span></div>
+        <div class="sector-row"><span class="s-name" id="consumeExecTitle">집행금액</span><span class="s-num text-blue-700" id="consumeExec">0원</span></div>
+        <div class="sector-row"><span class="s-name">지출대기액</span><span class="s-num text-amber-700" id="consumePending">0원</span></div>
+        <div class="sector-row"><span class="s-name">예산잔액</span><span class="s-num" id="consumeRemain">0원</span></div>
         <div class="sector-progress-wrap">
-          <div class="sector-progress-bar">
-            <div class="sector-progress-fill fill-consume" id="consumeProgressFill" style="width: 0%;"></div>
-          </div>
-          <div class="sector-rate-box">
-            <span style="color:#1e40af;">최종 집행률</span>
-            <span style="color:#1e40af;" id="consumeRate">0.0%</span>
-          </div>
+          <div class="sector-progress-bar"><div class="sector-progress-fill fill-consume" id="consumeProgressFill" style="width: 0%;"></div></div>
+          <div class="sector-rate-box"><span style="color:#1e40af;">집행률</span><span style="color:#1e40af;" id="consumeRate">0.0%</span></div>
         </div>
       </div>
 
-      <!-- 3. 투자 분야 카드 -->
       <div class="sector-card invest">
         <div class="sector-card-head">
-          <span class="sector-badge-title badge-title-invest">🏗️ 투자 분야</span>
+          <span class="sector-badge-title badge-title-invest">투자 분야</span>
           <span class="sector-target-count">지침 7개 세목</span>
         </div>
-        <div class="sector-row">
-          <span class="s-name">예산현액</span>
-          <span class="s-num" id="investBudget">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name" id="investExecTitle">집행금액</span>
-          <span class="s-num" style="color: #6b21a8;" id="investExec">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name">지출대기액</span>
-          <span class="s-num" style="color: #d97706;" id="investPending">0원</span>
-        </div>
-        <div class="sector-row">
-          <span class="s-name">예산잔액</span>
-          <span class="s-num" id="investRemain">0원</span>
-        </div>
+        <div class="sector-row"><span class="s-name">예산현액</span><span class="s-num" id="investBudget">0원</span></div>
+        <div class="sector-row"><span class="s-name" id="investExecTitle">집행금액</span><span class="s-num text-purple-700" id="investExec">0원</span></div>
+        <div class="sector-row"><span class="s-name">지출대기액</span><span class="s-num text-amber-700" id="investPending">0원</span></div>
+        <div class="sector-row"><span class="s-name">예산잔액</span><span class="s-num" id="investRemain">0원</span></div>
         <div class="sector-progress-wrap">
-          <div class="sector-progress-bar">
-            <div class="sector-progress-fill fill-invest" id="investProgressFill" style="width: 0%;"></div>
-          </div>
-          <div class="sector-rate-box">
-            <span style="color:#6b21a8;">최종 집행률</span>
-            <span style="color:#6b21a8;" id="investRate">0.0%</span>
-          </div>
+          <div class="sector-progress-bar"><div class="sector-progress-fill fill-invest" id="investProgressFill" style="width: 0%;"></div></div>
+          <div class="sector-rate-box"><span style="color:#6b21a8;">집행률</span><span style="color:#6b21a8;" id="investRate">0.0%</span></div>
         </div>
       </div>
     </div>
@@ -480,9 +425,9 @@
           <th rowspan="2" class="text-left sortable" data-key="name" onclick="handleHeaderClick('name')" style="vertical-align:middle; width:280px;">
             구 분 <span class="sort-icon" id="icon_name"></span>
           </th>
-          <th colspan="3" class="group-header" style="background:#f0f2f5;">단위과제카드</th>
-          <th colspan="4" class="group-header" style="background:#f8fafc;">일상경비교부액</th>
-          <th colspan="4" class="group-header" id="thGroupFinal" style="background:#eaf6ee; color:#02692e;">
+          <th colspan="3" class="group-header">단위과제카드</th>
+          <th colspan="4" class="group-header">일상경비교부액</th>
+          <th colspan="4" class="group-header" id="thGroupFinal" style="background:#f0fdf4; color:#047857;">
             최종 집행 현황 (실집행금액 기준)
           </th>
         </tr>
@@ -495,16 +440,16 @@
           <th class="sortable" data-key="actR" onclick="handleHeaderClick('actR')">원인행위 [R] <span class="sort-icon" id="icon_actR"></span></th>
           <th class="sortable" data-key="expS" onclick="handleHeaderClick('expS')">지출액 [S] <span class="sort-icon" id="icon_expS"></span></th>
           
-          <th class="sortable" data-key="exec" onclick="handleHeaderClick('exec')" id="thColExec" style="background:#e8f7ee; color:#02692e;">
-            실집행금액 [M-Q+S] <span class="sort-icon" id="icon_exec"></span>
+          <th class="sortable" data-key="exec" onclick="handleHeaderClick('exec')" id="thColExec" style="background:#f0fdf4; color:#047857;">
+            실집행금액 <span class="sort-icon" id="icon_exec"></span>
           </th>
-          <th style="background:#fff7ed; color:#c2410c; min-width:120px;">
-            지출대기액(예정액)
+          <th style="background:#fffbeb; color:#b45309; min-width:110px;">
+            지출대기액
           </th>
-          <th class="sortable" data-key="rate" onclick="handleHeaderClick('rate')" style="background:#e8f7ee; color:#02692e; min-width:90px;">
+          <th class="sortable" data-key="rate" onclick="handleHeaderClick('rate')" style="background:#f0fdf4; color:#047857; min-width:85px;">
             집행률 <span class="sort-icon" id="icon_rate"></span>
           </th>
-          <th class="sortable" data-key="remain" onclick="handleHeaderClick('remain')" style="background:#e8f7ee; color:#02692e;">
+          <th class="sortable" data-key="remain" onclick="handleHeaderClick('remain')" style="background:#f0fdf4; color:#047857;">
             예산잔액 <span class="sort-icon" id="icon_remain"></span>
           </th>
         </tr>
@@ -514,20 +459,17 @@
   </div>
 
   <div class="footer">
-    <p style="margin: 0 0 6px 0; font-weight: 700; color: #222;">
-      Copyright © 2026 부산광역시교육청창의융합교육원. All Rights Reserved.
+    <p style="margin: 0 0 4px 0; font-weight: 700; color: #334155;">
+      Copyright © 2026 부산광역시교육청. All Rights Reserved.
     </p>
-    <p style="margin: 0 0 5px 0;">
-      본 프로그램의 소스코드 및 산출 로직은 저작권법의 보호를 받으며, 무단 복제·도용 및 배포 시 법적 조치가 취해질 수 있습니다.
-    </p>
-    <p style="margin: 0; color: #888;">
-      프로그램 버전: 20260904 개정판 | 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: var(--naver-green-dark); font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
+    <p style="margin: 0; color: #94a3b8;">
+      프로그램 버전: 20260904 개정판 &nbsp;|&nbsp; 기능 문의 및 오류 제보: <a href="mailto:hola3927@korea.kr" style="color: #2563eb; font-weight: 600; text-decoration: none;">hola3927@korea.kr</a>
     </p>
   </div>
 </div>
 
 <script>
-/* 보안 및 인풋 내 단축키 허용 제어 */
+/* 보안 제어 */
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'INPUT') return;
   e.preventDefault();
@@ -536,15 +478,12 @@ document.addEventListener('contextmenu', function(e) {
 document.addEventListener('keydown', function(e) {
   if (e.target.tagName === 'INPUT') return;
   if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-  if (e.ctrlKey) {
-    if (['u', 's', 'c'].includes(e.key.toLowerCase())) {
-      e.preventDefault();
-      return false;
-    }
+  if (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) {
+    e.preventDefault();
+    return false;
   }
 });
 
-/* 원가통계비목 및 세목 마스터 매핑 테이블 */
 const bimokMap = {
   "110": "인건비", "210": "운영비", "220": "여비", "230": "업무추진비", "240": "복리후생비", "250": "직무수행경비",
   "260": "연구개발비", "280": "경상교육지원사업비", "310": "보전금", "320": "민간이전", "330": "자치단체등이전",
@@ -571,7 +510,7 @@ const semokMap = {
   "330-05": "공공기관등에 대한경상적위탁사업비", "330-06": "공공기관등에 대한자본적위탁사업비", "330-07": "자치단체간 부담금",
   "330-08": "기타부담금", "330-09": "대학등에대한 경상적위탁사업비", "330-10": "대학등에대 한자본적위탁사업비",
   "340-01": "해외경상이전", "340-02": "국제부담금", "350-01": "출연금", "410-01": "토지매입비",
-  "420-01": "기본조사설계비", "420-02": "실시설계비", "420-03": "시설비", "420-04": "감리비", "420-05": "시설부대비",
+  "420-01": "기본조사설계비", "420-02": "실 실시설계비", "420-03": "시설비", "420-04": "감리비", "420-05": "시설부대비",
   "430-01": "취득비", "440-01": "무형자산", "470-01": "투자교육지원사업비", "510-01": "차입금상환",
   "510-02": "차입금이자", "510-03": "민자사업지급금", "520-01": "예치금", "610-01": "일반회계전출금",
   "610-02": "기타특별회계전출금", "610-03": "국립학교학생 지원경비", "620-01": "인건비지원", "620-02": "학교운영비",
@@ -582,8 +521,6 @@ const semokMap = {
   "820-01": "기금전출금", "830-01": "예탁금", "840-01": "예수금원금 상환", "840-02": "예수금이자 상환"
 };
 
-/* 세출분야별 세목 코드 정의 (5자리 연속숫자) */
-// 1) 신속집행 (43개)
 const sectorQuickCodes = new Set([
   "21001", "21003", "21007", "21008", "21009", "21010", "21011", "21012", "21015", "24002",
   "32001", "32002", "32008", "32009", "33001", "33002", "33003", "33004", "33005", "33006",
@@ -592,7 +529,6 @@ const sectorQuickCodes = new Set([
   "42001", "42002", "42003", "42004", "42005"
 ]);
 
-// 2) 소비분야 (35개)
 const sectorConsumeCodes = new Set([
   "21001", "21003", "21007", "21008", "21009", "21010", "21011", "21012", "21015", "24002",
   "11001", "11003", "11004", "11005",
@@ -604,7 +540,6 @@ const sectorConsumeCodes = new Set([
   "26001"
 ]);
 
-// 3) 투자분야 (7개)
 const sectorInvestCodes = new Set([
   "42001", "42002", "42003", "42004", "42005", "43001", "44001"
 ]);
@@ -621,17 +556,9 @@ let loadedFilesData = [];
 let currentMode = 'bimok';
 let currentSortKey = 'name';
 let currentSortOrder = 'asc';
-
-// 집행 산출 기준 상태: 'real' (실집행), 'act' (원인행위 L-P+R), 'cardAct' (단위과제카드 원인행위 L)
 let execBase = 'real';
-
-// 세출분야 필터: 'all', 'quick', 'consume', 'invest'
 let currentSectorFilter = 'all';
-
-// 지출대기액(예정액) 저장소: { [cleanName]: number }
 let pendingAmountMap = {};
-
-// 엑셀/클립보드 내보내기용 글로벌 캐시
 let currentExportPayload = null;
 
 const fileInput = document.getElementById('fileInput');
@@ -640,11 +567,11 @@ fileInput.addEventListener('change', (e) => {
 });
 
 const dropZone = document.getElementById('dropZone');
-dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#03C75A'; });
-dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#a7e3be'; });
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#1e3a8a'; });
+dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#cbd5e1'; });
 dropZone.addEventListener('drop', (e) => {
   e.preventDefault();
-  dropZone.style.borderColor = '#a7e3be';
+  dropZone.style.borderColor = '#cbd5e1';
   if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
 });
 
@@ -677,7 +604,7 @@ function handleFiles(files) {
 
       processed++;
       if (processed === files.length) {
-        document.getElementById('fileListText').innerHTML = `<strong style="color:#029f45;">총 ${files.length}개 파일 로드 완료</strong>`;
+        document.getElementById('fileListText').innerHTML = `<strong style="color:#047857;">총 ${files.length}개 파일 로드 완료</strong>`;
         document.getElementById('controls').style.display = 'flex';
         document.getElementById('summaryCards').style.display = 'grid';
         document.getElementById('sectorBoard').style.display = 'block';
@@ -725,48 +652,30 @@ function parseEdufineSheet(sheetData, fileName) {
         return isNaN(p) ? 0 : p;
       };
 
-      const budget = num(8);       // I열: 예산현액
-      const actL   = num(11);      // L열: 단위과제 원인행위액
-      const expM   = num(12);      // M열: 단위과제 지출액
-      const distP  = num(15);      // P열: 일상경비 배부액
-      const grantQ = num(16);      // Q열: 일상경비 교부액
-      const actR   = num(17);      // R열: 일상경비 원인행위액
-      const expS   = num(18);      // S열: 일상경비 지출액
+      const budget = num(8);
+      const actL   = num(11);
+      const expM   = num(12);
+      const distP  = num(15);
+      const grantQ = num(16);
+      const actR   = num(17);
+      const expS   = num(18);
 
-      // 1. 실집행금액: 지출액 [M] - 교부액 [Q] + 지출액 [S]
       const realExec = expM - grantQ + expS;
-      // 2. 원인행위액 기준: 단위과제 원인행위액 [L] - 배부액 [P] + 원인행위액 [R]
       const actExec = actL - distP + actR;
-      // 3. 단위과제카드 원인행위액 기준: 원인행위액 [L]
       const cardActExec = actL;
-
       const sectors = getSectorsBy5Code(code5);
 
       rows.push({
-        fileName: fileName,
-        businessItem: currentBusinessItem,
-        cRaw: cCol,
-        bimokCode: bimokCode,
-        semokCode: semokCode,
-        code5: code5,
-        sectors: sectors,
-        budget: budget,
-        actL: actL,
-        expM: expM,
-        distP: distP,
-        grantQ: grantQ,
-        actR: actR,
-        expS: expS,
-        realExec: realExec,
-        actExec: actExec,
-        cardActExec: cardActExec
+        fileName, businessItem: currentBusinessItem, cRaw: cCol,
+        bimokCode, semokCode, code5, sectors,
+        budget, actL, expM, distP, grantQ, actR, expS,
+        realExec, actExec, cardActExec
       });
     }
   }
-  return { cardName: currentCardName, rows: rows };
+  return { cardName: currentCardName, rows };
 }
 
-/* 3종 집행 산출 기준 전환 함수 */
 function setExecBase(base) {
   execBase = base;
   const btnReal = document.getElementById('btnBaseReal');
@@ -802,7 +711,7 @@ function setExecBase(base) {
     investExecTitle.textContent = '원인행위액';
   } else if (base === 'cardAct') {
     btnCardAct.className = 'btn-base active-card-act';
-    thGroupFinal.textContent = '최종 집행 현황 (단위과제카드 원인행위액[L] 기준)';
+    thGroupFinal.textContent = '최종 집행 현황 (단위과제카드 원인행위액 기준)';
     thColExec.innerHTML = `단위원인행위액 [L] <span class="sort-icon" id="icon_exec"></span>`;
     cardLabelExec.textContent = '단위과제 원인행위액 [L]';
     quickExecTitle.textContent = '단위원인액';
@@ -824,7 +733,6 @@ function changeMode(mode) {
   document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
   const activeBtn = document.getElementById(`btn_${mode}`);
   if (activeBtn) activeBtn.classList.add('active');
-
   resetSortToDefault();
   renderTable();
 }
@@ -882,7 +790,6 @@ function renderTable(keepFocus = false) {
     if (file) targetRows = file.rows;
   }
 
-  /* 1. 세출분야별(신속·소비·투자) 통계 산출 */
   const sectorStats = {
     quick:   { budget: 0, exec: 0, pending: 0, codes: sectorQuickCodes },
     consume: { budget: 0, exec: 0, pending: 0, codes: sectorConsumeCodes },
@@ -905,7 +812,6 @@ function renderTable(keepFocus = false) {
     }
   });
 
-  /* 2. 테이블 그룹핑 집계 */
   const grouped = {};
   targetRows.forEach(r => {
     let key = "";
@@ -914,7 +820,6 @@ function renderTable(keepFocus = false) {
     let cleanName = "";
     let itemSectors = [];
 
-    // 분야 태그 HTML 생성 함수
     const makeBadgeHtml = (sectors) => {
       let h = "";
       if (sectors.includes('신속')) h += `<span class="badge-tag tag-quick">신속</span>`;
@@ -963,11 +868,7 @@ function renderTable(keepFocus = false) {
 
     if (!grouped[key]) {
       grouped[key] = {
-        name: key,
-        sortName: sortName,
-        htmlName: htmlName,
-        cleanName: cleanName,
-        sectors: new Set(),
+        name: key, sortName, htmlName, cleanName, sectors: new Set(),
         budget: 0, actL: 0, expM: 0, distP: 0, grantQ: 0, actR: 0, expS: 0,
         realExec: 0, actExec: 0, cardActExec: 0
       };
@@ -985,7 +886,6 @@ function renderTable(keepFocus = false) {
     grouped[key].cardActExec += r.cardActExec;
   });
 
-  // 집행액, 지출대기액 및 실시간 집행률 산출
   let items = Object.values(grouped).map(item => {
     let baseExec = 0;
     if (execBase === 'real') baseExec = item.realExec;
@@ -997,7 +897,6 @@ function renderTable(keepFocus = false) {
     const rate = item.budget > 0 ? (totalExecWithPending / item.budget * 100) : 0;
     const remain = item.budget - totalExecWithPending;
 
-    // 분야별 통계에 지출대기액 반영
     if (item.sectors.has('신속')) sectorStats.quick.pending += pending;
     if (item.sectors.has('소비')) sectorStats.consume.pending += pending;
     if (item.sectors.has('투자')) sectorStats.invest.pending += pending;
@@ -1006,18 +905,12 @@ function renderTable(keepFocus = false) {
     const sectorDesc = sectorArray.length > 0 ? ` (${sectorArray.join(', ')})` : '';
 
     return {
-      ...item,
-      sectorArray: sectorArray,
+      ...item, sectorArray,
       exportName: item.cleanName + sectorDesc,
-      exec: baseExec,
-      pending: pending,
-      totalExecWithPending: totalExecWithPending,
-      rate: rate,
-      remain: remain
+      exec: baseExec, pending, totalExecWithPending, rate, remain
     };
   });
 
-  /* 3. 분야 필터링 적용 */
   if (currentSectorFilter === 'quick') {
     items = items.filter(it => it.sectors.has('신속'));
   } else if (currentSectorFilter === 'consume') {
@@ -1026,7 +919,6 @@ function renderTable(keepFocus = false) {
     items = items.filter(it => it.sectors.has('투자'));
   }
 
-  /* 4. 정렬 */
   items.sort((a, b) => {
     if (currentSortKey === 'name') {
       return currentSortOrder === 'asc' 
@@ -1039,7 +931,6 @@ function renderTable(keepFocus = false) {
     }
   });
 
-  // 헤더 정렬 표시 갱신
   document.querySelectorAll('.sortable').forEach(th => th.classList.remove('sort-active'));
   document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
 
@@ -1070,21 +961,21 @@ function renderTable(keepFocus = false) {
 
     const rateStr = item.rate.toFixed(1);
     const progressPercent = Math.min(Math.max(item.rate, 0), 100);
-    const barColor = item.rate >= 80 ? 'rgba(3, 199, 90, 0.18)' : 'rgba(217, 119, 6, 0.18)';
-    const rateTextColor = item.rate >= 80 ? '#029f45' : '#d97706';
+    const barColor = item.rate >= 80 ? 'rgba(4, 120, 87, 0.12)' : 'rgba(217, 119, 6, 0.12)';
+    const rateTextColor = item.rate >= 80 ? '#047857' : '#b45309';
 
     const inputId = `input_pending_${idx}`;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="text-left">${item.htmlName}</td>
       <td>${item.budget.toLocaleString()}</td>
-      <td style="color:#718096;">${item.actL.toLocaleString()}</td>
+      <td style="color:#64748b;">${item.actL.toLocaleString()}</td>
       <td>${item.expM.toLocaleString()}</td>
-      <td style="color:#718096;">${item.distP.toLocaleString()}</td>
+      <td style="color:#64748b;">${item.distP.toLocaleString()}</td>
       <td>${item.grantQ.toLocaleString()}</td>
-      <td style="color:#718096;">${item.actR.toLocaleString()}</td>
+      <td style="color:#64748b;">${item.actR.toLocaleString()}</td>
       <td>${item.expS.toLocaleString()}</td>
-      <td class="highlight-cell" style="color:#02692e; background:#f6fcf8;">${item.exec.toLocaleString()}</td>
+      <td class="highlight-cell" style="color:#047857; background:#f0fdf4;">${item.exec.toLocaleString()}</td>
       <td style="text-align:center; background:#fffbeb;">
         <input type="text" id="${inputId}" class="input-pending"
           value="${item.pending ? item.pending.toLocaleString() : ''}"
@@ -1096,21 +987,20 @@ function renderTable(keepFocus = false) {
       <td style="font-weight:700; background: linear-gradient(to right, ${barColor} ${progressPercent}%, transparent ${progressPercent}%); color: ${rateTextColor};">
         ${rateStr}%
       </td>
-      <td style="font-weight:600; color:${item.remain < 0 ? '#e11d48' : '#111'};">
+      <td style="font-weight:600; color:${item.remain < 0 ? '#b91c1c' : '#1e293b'};">
         ${item.remain.toLocaleString()}
       </td>
     `;
     tbody.appendChild(tr);
   });
 
-  // 합계 행 계산
   const totalExecWithPending = tExec + tPending;
   const totalRate = tBudget > 0 ? ((totalExecWithPending / tBudget) * 100).toFixed(1) : '0.0';
   const totalRemain = tBudget - totalExecWithPending;
 
   const totalProgressPercent = Math.min(Math.max(parseFloat(totalRate), 0), 100);
-  const totalBarColor = totalRate >= 80 ? 'rgba(3, 199, 90, 0.22)' : 'rgba(217, 119, 6, 0.22)';
-  const totalTextColor = totalRate >= 80 ? '#029f45' : '#d97706';
+  const totalBarColor = totalRate >= 80 ? 'rgba(4, 120, 87, 0.15)' : 'rgba(217, 119, 6, 0.15)';
+  const totalTextColor = totalRate >= 80 ? '#047857' : '#b45309';
 
   const totalTr = document.createElement('tr');
   totalTr.className = 'total-row';
@@ -1123,25 +1013,23 @@ function renderTable(keepFocus = false) {
     <td>${tGrantQ.toLocaleString()}</td>
     <td>${tActR.toLocaleString()}</td>
     <td>${tExpS.toLocaleString()}</td>
-    <td class="highlight-cell" style="color:#02692e;">${tExec.toLocaleString()}</td>
-    <td style="text-align:right; padding-right:12px; color:#c2410c; font-weight:700;">${tPending.toLocaleString()}</td>
+    <td class="highlight-cell" style="color:#047857;">${tExec.toLocaleString()}</td>
+    <td style="text-align:right; padding-right:12px; color:#b45309; font-weight:700;">${tPending.toLocaleString()}</td>
     <td style="font-weight:700; background: linear-gradient(to right, ${totalBarColor} ${totalProgressPercent}%, transparent ${totalProgressPercent}%); color: ${totalTextColor};">
       ${totalRate}%
     </td>
-    <td style="font-weight:700; color:${totalRemain < 0 ? '#e11d48' : '#02692e'};">
+    <td style="font-weight:700; color:${totalRemain < 0 ? '#b91c1c' : '#047857'};">
       ${totalRemain.toLocaleString()}
     </td>
   `;
   tbody.appendChild(totalTr);
 
-  // 상단 종합 요약 카드 업데이트
   document.getElementById('sumBudget').textContent = tBudget.toLocaleString() + '원';
   document.getElementById('sumExec').textContent = tExec.toLocaleString() + '원';
   document.getElementById('sumPending').textContent = tPending.toLocaleString() + '원';
   document.getElementById('sumRate').textContent = totalRate + '%';
   document.getElementById('sumRemain').textContent = totalRemain.toLocaleString() + '원';
 
-  /* 5. 세출분야별 통계 카드 UI 실시간 갱신 */
   const updateSectorCard = (key, bId, eId, pId, rId, fillId, rateId) => {
     const st = sectorStats[key];
     const totalExec = st.exec + st.pending;
@@ -1165,7 +1053,6 @@ function renderTable(keepFocus = false) {
     if (el) el.focus();
   }
 
-  // 캐싱
   let modeName = "1-1_비목별";
   if (currentMode === 'semok') modeName = '1-2_세목별';
   else if (currentMode === 'item') modeName = '2_사업항목별';
@@ -1175,20 +1062,15 @@ function renderTable(keepFocus = false) {
   const scopeText = scope === 'all' ? '전체통합' : scope.replace(/\.[^/.]+$/, "");
 
   currentExportPayload = {
-    items: items,
-    totals: {
+    items, totals: {
       budget: tBudget, actL: tActL, expM: tExpM, distP: tDistP,
       grantQ: tGrantQ, actR: tActR, expS: tExpS, exec: tExec,
       pending: tPending, rate: parseFloat(totalRate), remain: totalRemain
     },
-    modeName: modeName,
-    scopeText: scopeText,
-    execBase: execBase,
-    sectorFilter: currentSectorFilter
+    modeName, scopeText, execBase, sectorFilter: currentSectorFilter
   };
 }
 
-/* 한글(HWP) 표 붙여넣기용 TSV 복사 함수 */
 function copyForHWP() {
   if (!currentExportPayload || !currentExportPayload.items.length) {
     alert("복사할 데이터가 없습니다. 먼저 엑셀 파일을 업로드해 주세요.");
@@ -1200,7 +1082,6 @@ function copyForHWP() {
   else if (currentExportPayload.execBase === 'cardAct') baseName = "단위원인행위액[L]";
 
   let tsv = `구분\t예산현액\t지출액\t${baseName}\t지출대기액\t최종집행률\t예산잔액\n`;
-
   currentExportPayload.items.forEach(item => {
     tsv += `${item.exportName}\t${item.budget}\t${item.expM}\t${item.exec}\t${item.pending}\t${item.rate.toFixed(1)}%\t${item.remain}\n`;
   });
@@ -1210,15 +1091,14 @@ function copyForHWP() {
   
   navigator.clipboard.writeText(tsv).then(() => {
     alert("한글(HWP) 표 붙여넣기용 데이터가 클립보드에 복사되었습니다.\n\n한글 문서의 표 안을 블록 지정하거나 첫 셀에 커서를 둔 후 [Ctrl + V]를 누르세요.");
-  }).catch(err => {
-    alert("클립보드 복사 중 오류가 발생했습니다. 브라우저 권한을 확인해 주세요.");
+  }).catch(() => {
+    alert("클립보드 복사 중 오류가 발생했습니다.");
   });
 }
 
-/* 엑셀 정식 서식 생성 및 다운로드 */
 function exportToExcel() {
-  if (!currentExportPayload || !currentExportPayload.items || currentExportPayload.items.length === 0) {
-    alert("내보낼 집계 데이터가 없습니다. 먼저 엑셀 파일을 업로드해 주세요.");
+  if (!currentExportPayload || !currentExportPayload.items.length) {
+    alert("내보낼 데이터가 없습니다.");
     return;
   }
 
@@ -1226,114 +1106,58 @@ function exportToExcel() {
   const ws = {};
 
   const borderThin = {
-    top: { style: "thin", color: { rgb: "D3D8DF" } },
-    bottom: { style: "thin", color: { rgb: "D3D8DF" } },
-    left: { style: "thin", color: { rgb: "D3D8DF" } },
-    right: { style: "thin", color: { rgb: "D3D8DF" } }
+    top: { style: "thin", color: { rgb: "E2E8F0" } },
+    bottom: { style: "thin", color: { rgb: "E2E8F0" } },
+    left: { style: "thin", color: { rgb: "E2E8F0" } },
+    right: { style: "thin", color: { rgb: "E2E8F0" } }
   };
   const borderHeader = {
-    top: { style: "thin", color: { rgb: "B8BFC7" } },
-    bottom: { style: "thin", color: { rgb: "B8BFC7" } },
-    left: { style: "thin", color: { rgb: "B8BFC7" } },
-    right: { style: "thin", color: { rgb: "B8BFC7" } }
+    top: { style: "thin", color: { rgb: "CBD5E1" } },
+    bottom: { style: "thin", color: { rgb: "CBD5E1" } },
+    left: { style: "thin", color: { rgb: "CBD5E1" } },
+    right: { style: "thin", color: { rgb: "CBD5E1" } }
   };
 
-  // 1. 대제목 (Row 0)
   ws[XLSX.utils.encode_cell({ c: 0, r: 0 })] = {
-    v: "부산광역시교육청창의융합교육원 예산 집행 현황",
+    v: "부산광역시교육청 교육비특별회계 예산 집행 현황",
     t: 's',
     s: {
-      font: { name: "맑은 고딕", sz: 16, bold: true, color: { rgb: "1E3A8A" } },
+      font: { name: "맑은 고딕", sz: 15, bold: true, color: { rgb: "1E293B" } },
       alignment: { horizontal: "center", vertical: "center" }
     }
   };
 
-  // 2. 메타정보 (Row 1)
   const now = new Date();
-  const dateStr = now.getFullYear() + "-" +
-    String(now.getMonth() + 1).padStart(2, '0') + "-" +
-    String(now.getDate()).padStart(2, '0') + " " +
-    String(now.getHours()).padStart(2, '0') + ":" +
-    String(now.getMinutes()).padStart(2, '0');
+  const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   
   let baseDesc = "실집행금액기준[M-Q+S]";
   if (currentExportPayload.execBase === 'act') baseDesc = "원인행위액기준[L-P+R]";
   else if (currentExportPayload.execBase === 'cardAct') baseDesc = "단위과제원인행위액기준[L]";
 
-  const filterDesc = currentExportPayload.sectorFilter === 'all' ? '전체세목' : (
-    currentExportPayload.sectorFilter === 'quick' ? '신속집행대상' : (
-      currentExportPayload.sectorFilter === 'consume' ? '소비분야' : '투자분야'
-    )
-  );
-
-  const metaText = `■ 산출기준: ${baseDesc}  |  ■ 분류: ${currentExportPayload.modeName} (${filterDesc})  |  ■ 대상: ${currentExportPayload.scopeText}  |  ■ 출력: ${dateStr}`;
-  
+  const metaText = `■ 기준: ${baseDesc} | 분류: ${currentExportPayload.modeName} | 대상: ${currentExportPayload.scopeText} | 출력: ${dateStr}`;
   ws[XLSX.utils.encode_cell({ c: 0, r: 1 })] = {
-    v: metaText,
-    t: 's',
-    s: {
-      font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "555555" } },
-      alignment: { horizontal: "right", vertical: "center" }
-    }
+    v: metaText, t: 's',
+    s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "64748B" } }, alignment: { horizontal: "right", vertical: "center" } }
   };
 
-  // 3. 헤더 1단 (Row 3)
   for (let c = 0; c <= 11; c++) {
-    let bg = "F4F6F9";
-    let color = "2B3036";
-    let text = "";
-    if (c === 0) text = "구 분";
-    else if (c >= 1 && c <= 3) { text = "단위과제카드"; bg = "EDF2F7"; }
-    else if (c >= 4 && c <= 7) { text = "일상경비교부액"; bg = "F7FAFC"; }
-    else if (c >= 8 && c <= 11) { 
-      if (currentExportPayload.execBase === 'real') text = "최종 집행 현황 (실집행금액 기준)";
-      else if (currentExportPayload.execBase === 'act') text = "최종 집행 현황 (원인행위액 기준)";
-      else text = "최종 집행 현황 (단위원인행위액[L] 기준)";
-      bg = "E6F4EA"; color = "02692E"; 
-    }
-
-    ws[XLSX.utils.encode_cell({ c: c, r: 3 })] = {
-      v: text,
-      t: 's',
-      s: {
-        font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: color } },
-        fill: { fgColor: { rgb: bg } },
-        alignment: { horizontal: "center", vertical: "center" },
-        border: borderHeader
-      }
+    let bg = "F1F5F9";
+    let text = (c === 0) ? "구 분" : (c <= 3 ? "단위과제카드" : (c <= 7 ? "일상경비교부액" : "최종 집행 현황"));
+    ws[XLSX.utils.encode_cell({ c, r: 3 })] = {
+      v: text, t: 's',
+      s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "334155" } }, fill: { fgColor: { rgb: bg } }, alignment: { horizontal: "center", vertical: "center" }, border: borderHeader }
     };
   }
 
-  // 3-2. 헤더 2단 (Row 4)
-  let execColTitle = "실집행금액 [M-Q+S]";
-  if (currentExportPayload.execBase === 'act') execColTitle = "원인행위액 [L-P+R]";
-  else if (currentExportPayload.execBase === 'cardAct') execColTitle = "단위원인행위액 [L]";
-
   const h2_cols = [
-    { c: 0, title: "구 분", bg: "F4F6F9", color: "2B3036" },
-    { c: 1, title: "예산현액 [I]", bg: "EDF2F7", color: "2B3036" },
-    { c: 2, title: "원인행위 [L]", bg: "EDF2F7", color: "2B3036" },
-    { c: 3, title: "지출액 [M]", bg: "EDF2F7", color: "2B3036" },
-    { c: 4, title: "배부액 [P]", bg: "F7FAFC", color: "2B3036" },
-    { c: 5, title: "교부액 [Q]", bg: "F7FAFC", color: "2B3036" },
-    { c: 6, title: "원인행위 [R]", bg: "F7FAFC", color: "2B3036" },
-    { c: 7, title: "지출액 [S]", bg: "F7FAFC", color: "2B3036" },
-    { c: 8, title: execColTitle, bg: "E6F4EA", color: "02692E" },
-    { c: 9, title: "지출대기액", bg: "FFF7ED", color: "C2410C" },
-    { c: 10, title: "최종집행률", bg: "E6F4EA", color: "02692E" },
-    { c: 11, title: "예산잔액", bg: "E6F4EA", color: "02692E" }
+    "구 분", "예산현액 [I]", "원인행위 [L]", "지출액 [M]", "배부액 [P]", "교부액 [Q]", "원인행위 [R]", "지출액 [S]",
+    "집행금액", "지출대기액", "최종집행률", "예산잔액"
   ];
 
-  h2_cols.forEach(col => {
-    ws[XLSX.utils.encode_cell({ c: col.c, r: 4 })] = {
-      v: col.title,
-      t: 's',
-      s: {
-        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: col.color } },
-        fill: { fgColor: { rgb: col.bg } },
-        alignment: { horizontal: "center", vertical: "center", wrapText: true },
-        border: borderHeader
-      }
+  h2_cols.forEach((title, c) => {
+    ws[XLSX.utils.encode_cell({ c, r: 4 })] = {
+      v: title, t: 's',
+      s: { font: { name: "맑은 고딕", sz: 9, bold: true, color: { rgb: "475569" } }, fill: { fgColor: { rgb: "F8FAFC" } }, alignment: { horizontal: "center", vertical: "center" }, border: borderHeader }
     };
   });
 
@@ -1346,230 +1170,92 @@ function exportToExcel() {
     { s: { c: 8, r: 3 }, e: { c: 11, r: 3 } }
   ];
 
-  // 4. 데이터 행 출력
   let currentRow = 5;
   currentExportPayload.items.forEach((item, idx) => {
-    const isEven = idx % 2 === 1;
-    const bg = isEven ? "FAFBFC" : "FFFFFF";
-    const highlightBg = isEven ? "F0FBF4" : "F6FCF8";
+    const bg = (idx % 2 === 1) ? "F8FAFC" : "FFFFFF";
 
     ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-      v: item.exportName,
-      t: 's',
-      s: {
-        font: { name: "맑은 고딕", sz: 9.5, color: { rgb: "111111" } },
-        fill: { fgColor: { rgb: bg } },
-        alignment: { horizontal: "left", vertical: "center" },
-        border: borderThin
-      }
+      v: item.exportName, t: 's',
+      s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "1E293B" } }, fill: { fgColor: { rgb: bg } }, alignment: { horizontal: "left", vertical: "center" }, border: borderThin }
     };
 
     const numFields = [item.budget, item.actL, item.expM, item.distP, item.grantQ, item.actR, item.expS];
     numFields.forEach((val, fIdx) => {
       ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
-        v: val,
-        t: 'n',
-        z: '#,##0',
-        s: {
-          font: { name: "맑은 고딕", sz: 9.5, color: { rgb: (fIdx === 1 || fIdx === 3 || fIdx === 5) ? "666666" : "111111" } },
-          fill: { fgColor: { rgb: bg } },
-          alignment: { horizontal: "right", vertical: "center" },
-          border: borderThin
-        }
+        v: val, t: 'n', z: '#,##0',
+        s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: (fIdx === 1 || fIdx === 3 || fIdx === 5) ? "64748B" : "1E293B" } }, fill: { fgColor: { rgb: bg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin }
       };
     });
 
-    // Col 8: 집행금액
     ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
-      v: item.exec,
-      t: 'n',
-      z: '#,##0',
-      s: {
-        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "02692E" } },
-        fill: { fgColor: { rgb: highlightBg } },
-        alignment: { horizontal: "right", vertical: "center" },
-        border: borderThin
-      }
+      v: item.exec, t: 'n', z: '#,##0',
+      s: { font: { name: "맑은 고딕", sz: 9, bold: true, color: { rgb: "047857" } }, fill: { fgColor: { rgb: "F0FDF4" } }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin }
     };
 
-    // Col 9: 지출대기액
     ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
-      v: item.pending,
-      t: 'n',
-      z: '#,##0',
-      s: {
-        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "C2410C" } },
-        fill: { fgColor: { rgb: "FFFBEB" } },
-        alignment: { horizontal: "right", vertical: "center" },
-        border: borderThin
-      }
+      v: item.pending, t: 'n', z: '#,##0',
+      s: { font: { name: "맑은 고딕", sz: 9, bold: true, color: { rgb: "B45309" } }, fill: { fgColor: { rgb: "FFFBEB" } }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin }
     };
 
-    // Col 10: 최종 집행률
     const rateDecimal = item.budget > 0 ? (item.totalExecWithPending / item.budget) : 0;
     ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
-      v: rateDecimal,
-      t: 'n',
-      z: '0.0%',
-      s: {
-        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: item.rate >= 80 ? "029F45" : "D97706" } },
-        fill: { fgColor: { rgb: highlightBg } },
-        alignment: { horizontal: "right", vertical: "center" },
-        border: borderThin
-      }
+      v: rateDecimal, t: 'n', z: '0.0%',
+      s: { font: { name: "맑은 고딕", sz: 9, bold: true, color: { rgb: item.rate >= 80 ? "047857" : "B45309" } }, fill: { fgColor: { rgb: bg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin }
     };
 
-    // Col 11: 예산잔액
     ws[XLSX.utils.encode_cell({ c: 11, r: currentRow })] = {
-      v: item.remain,
-      t: 'n',
-      z: '#,##0',
-      s: {
-        font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: item.remain < 0 ? "E11D48" : "111111" } },
-        fill: { fgColor: { rgb: highlightBg } },
-        alignment: { horizontal: "right", vertical: "center" },
-        border: borderThin
-      }
+      v: item.remain, t: 'n', z: '#,##0',
+      s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: item.remain < 0 ? "B91C1C" : "1E293B" } }, fill: { fgColor: { rgb: bg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderThin }
     };
 
     currentRow++;
   });
 
-  // 5. 합계 행
   const tot = currentExportPayload.totals;
-  const borderTotal = {
-    top: { style: "thin", color: { rgb: "03C75A" } },
-    bottom: { style: "double", color: { rgb: "03C75A" } },
-    left: { style: "thin", color: { rgb: "B8BFC7" } },
-    right: { style: "thin", color: { rgb: "B8BFC7" } }
-  };
-  const totBg = "EEF9F2";
-
+  const totBg = "F1F5F9";
   ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-    v: "합 계",
-    t: 's',
-    s: {
-      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "111111" } },
-      fill: { fgColor: { rgb: totBg } },
-      alignment: { horizontal: "center", vertical: "center" },
-      border: borderTotal
-    }
+    v: "합 계", t: 's',
+    s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "1E293B" } }, fill: { fgColor: { rgb: totBg } }, alignment: { horizontal: "center", vertical: "center" }, border: borderHeader }
   };
 
   const totNums = [tot.budget, tot.actL, tot.expM, tot.distP, tot.grantQ, tot.actR, tot.expS];
   totNums.forEach((val, fIdx) => {
     ws[XLSX.utils.encode_cell({ c: fIdx + 1, r: currentRow })] = {
-      v: val,
-      t: 'n',
-      z: '#,##0',
-      s: {
-        font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "111111" } },
-        fill: { fgColor: { rgb: totBg } },
-        alignment: { horizontal: "right", vertical: "center" },
-        border: borderTotal
-      }
+      v: val, t: 'n', z: '#,##0',
+      s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "1E293B" } }, fill: { fgColor: { rgb: totBg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderHeader }
     };
   });
 
   ws[XLSX.utils.encode_cell({ c: 8, r: currentRow })] = {
-    v: tot.exec,
-    t: 'n',
-    z: '#,##0',
-    s: {
-      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "02692E" } },
-      fill: { fgColor: { rgb: totBg } },
-      alignment: { horizontal: "right", vertical: "center" },
-      border: borderTotal
-    }
+    v: tot.exec, t: 'n', z: '#,##0',
+    s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "047857" } }, fill: { fgColor: { rgb: totBg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderHeader }
   };
 
   ws[XLSX.utils.encode_cell({ c: 9, r: currentRow })] = {
-    v: tot.pending,
-    t: 'n',
-    z: '#,##0',
-    s: {
-      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "C2410C" } },
-      fill: { fgColor: { rgb: totBg } },
-      alignment: { horizontal: "right", vertical: "center" },
-      border: borderTotal
-    }
+    v: tot.pending, t: 'n', z: '#,##0',
+    s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "B45309" } }, fill: { fgColor: { rgb: totBg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderHeader }
   };
 
   const totalRateDec = tot.budget > 0 ? ((tot.exec + tot.pending) / tot.budget) : 0;
   ws[XLSX.utils.encode_cell({ c: 10, r: currentRow })] = {
-    v: totalRateDec,
-    t: 'n',
-    z: '0.0%',
-    s: {
-      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "02692E" } },
-      fill: { fgColor: { rgb: totBg } },
-      alignment: { horizontal: "right", vertical: "center" },
-      border: borderTotal
-    }
+    v: totalRateDec, t: 'n', z: '0.0%',
+    s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "047857" } }, fill: { fgColor: { rgb: totBg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderHeader }
   };
 
   ws[XLSX.utils.encode_cell({ c: 11, r: currentRow })] = {
-    v: tot.remain,
-    t: 'n',
-    z: '#,##0',
-    s: {
-      font: { name: "맑은 고딕", sz: 10, bold: true, color: { rgb: "111111" } },
-      fill: { fgColor: { rgb: totBg } },
-      alignment: { horizontal: "right", vertical: "center" },
-      border: borderTotal
-    }
-  };
-
-  currentRow++;
-
-  // 6. 하단 주석
-  currentRow++;
-  let formulaNote = "* 실집행금액 = 단위과제 지출액[M] - 일상경비 교부액[Q] + 일상경비 지출액[S]";
-  if (currentExportPayload.execBase === 'act') {
-    formulaNote = "* 원인행위액 기준 집행액 = 단위과제 원인행위액[L] - 일상경비 배부액[P] + 일상경비 원인행위액[R]";
-  } else if (currentExportPayload.execBase === 'cardAct') {
-    formulaNote = "* 단위과제카드 원인행위액 기준 집행액 = 단위과제카드 원인행위액[L열]";
-  }
-  
-  ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-    v: formulaNote,
-    t: 's',
-    s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "777777" } } }
-  };
-  currentRow++;
-  ws[XLSX.utils.encode_cell({ c: 0, r: currentRow })] = {
-    v: "* 최종집행률 및 잔액은 [지출대기액(예정액)]이 포함되어 실시간 계산된 결과입니다.",
-    t: 's',
-    s: { font: { name: "맑은 고딕", sz: 9, color: { rgb: "777777" } } }
+    v: tot.remain, t: 'n', z: '#,##0',
+    s: { font: { name: "맑은 고딕", sz: 9.5, bold: true, color: { rgb: "1E293B" } }, fill: { fgColor: { rgb: totBg } }, alignment: { horizontal: "right", vertical: "center" }, border: borderHeader }
   };
 
   ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: 11, r: currentRow } });
   ws['!merges'] = merges;
   ws['!cols'] = [
-    { wch: 36 }, // 구분
-    { wch: 17 }, // 예산현액
-    { wch: 15 }, // 단위원인
-    { wch: 15 }, // 단위지출
-    { wch: 15 }, // 일상배부
-    { wch: 15 }, // 일상교부
-    { wch: 15 }, // 일상원인
-    { wch: 15 }, // 일상지출
-    { wch: 18 }, // 집행금액
-    { wch: 15 }, // 지출대기액
-    { wch: 13 }, // 최종집행률
-    { wch: 17 }  // 예산잔액
+    { wch: 34 }, { wch: 16 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 },
+    { wch: 16 }, { wch: 14 }, { wch: 12 }, { wch: 16 }
   ];
-  ws['!rows'] = [
-    { hpt: 32 }, { hpt: 20 }, { hpt: 10 }, { hpt: 22 }, { hpt: 22 }
-  ];
-  for (let i = 5; i < currentRow - 3; i++) {
-    ws['!rows'].push({ hpt: 20 });
-  }
-  ws['!rows'].push({ hpt: 25 });
 
   XLSX.utils.book_append_sheet(wb, ws, "예산집행정리");
-
-  const fileName = `창의융합교육원_예산정리_${currentExportPayload.scopeText}_${currentExportPayload.modeName}_${currentExportPayload.execBase}.xlsx`;
+  const fileName = `부산광역시교육청 교육비특별회계 _예산정리_${currentExportPayload.scopeText}_${currentExportPayload.modeName}.xlsx`;
   XLSX.writeFile(wb, fileName);
 }
 </script>
